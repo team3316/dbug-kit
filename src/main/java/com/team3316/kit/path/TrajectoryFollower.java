@@ -8,11 +8,11 @@ import java.util.TimerTask;
 import java.util.Vector;
 
 public abstract class TrajectoryFollower extends ControlLoop {
-  private Encoder mLeftEnc, mRightEnc;
-  private Trajectory mTrajectory;
-  private int mCurrentSegment = 0;
-  private double mTotalLeftError, mTotalRightError, mTotalAngleError;
-  private double mLastLeftError, mLastRightError;
+  private Encoder _leftEnc, _rightEnc;
+  private Trajectory _trajectory;
+  private int _currentSegment = 0;
+  private double _totalLeftError, _totalRightError, _totalAngleError;
+  private double _lastLeftError, _lastRightError;
 
   public double baseWidth;
 
@@ -25,9 +25,9 @@ public abstract class TrajectoryFollower extends ControlLoop {
   public TimerTask task;
 
   public TrajectoryFollower (Encoder leftEnc, Encoder rightEnc, Trajectory trajectory, double baseWidth) {
-    this.mLeftEnc = leftEnc;
-    this.mRightEnc = rightEnc;
-    this.mTrajectory = trajectory;
+    this._leftEnc = leftEnc;
+    this._rightEnc = rightEnc;
+    this._trajectory = trajectory;
     this.baseWidth = baseWidth;
   }
 
@@ -64,8 +64,8 @@ public abstract class TrajectoryFollower extends ControlLoop {
 
   @Override
   public Vector<Double> currentState () {
-    double leftDist = this.mLeftEnc.getDistance();
-    double rightDist = this.mRightEnc.getDistance();
+    double leftDist = this._leftEnc.getDistance();
+    double rightDist = this._rightEnc.getDistance();
 
     // Encoder-based angle measurement gives positive angles in the counter-clockwise direction, hence the minus sign.
     double angle = -Math.toDegrees((rightDist - leftDist) / this.baseWidth);
@@ -80,7 +80,7 @@ public abstract class TrajectoryFollower extends ControlLoop {
 
   @Override
   public Vector<Double> goalState () {
-    Segment seg = this.mTrajectory.getSegment(this.mCurrentSegment);
+    Segment seg = this._trajectory.getSegment(this._currentSegment);
 
     Vector<Double> goal = new Vector<>(5);
     goal.set(0, seg.getLeftDist());
@@ -111,17 +111,17 @@ public abstract class TrajectoryFollower extends ControlLoop {
     if (this.kLeftI > 0) {
       double low = -1 / this.kLeftI;
       double high = 1 / this.kLeftI;
-      double newTotalLeftErr = this.mTotalLeftError + leftError;
+      double newTotalLeftErr = this._totalLeftError + leftError;
 
-      this.mTotalLeftError = Util.clampToBounds(newTotalLeftErr, low, high);
+      this._totalLeftError = Util.clampToBounds(newTotalLeftErr, low, high);
     }
 
     if (this.kRightI > 0) {
       double low = -1 / this.kRightI;
       double high = 1 / this.kRightI;
-      double newTotalRightErr = this.mTotalRightError + rightError;
+      double newTotalRightErr = this._totalRightError + rightError;
 
-      this.mTotalRightError = Util.clampToBounds(newTotalRightErr, low, high);
+      this._totalRightError = Util.clampToBounds(newTotalRightErr, low, high);
     }
 
     /*
@@ -130,22 +130,22 @@ public abstract class TrajectoryFollower extends ControlLoop {
      */
 
     double leftValue = this.kLeftP * leftError +
-                       this.kLeftI * this.mTotalLeftError +
-                       this.kLeftD * (((leftError - this.mLastLeftError) / this.dt) - velocity) +
+                       this.kLeftI * this._totalLeftError +
+                       this.kLeftD * (((leftError - this._lastLeftError) / this.dt) - velocity) +
                        this.kV * velocity + this.kA * acceleration;
-    this.mLastLeftError = leftError;
+    this._lastLeftError = leftError;
 
     double rightValue = this.kRightP * rightError +
-                        this.kRightI * this.mTotalRightError +
-                        this.kRightD * (((rightError - this.mLastRightError) / this.dt) - velocity) +
+                        this.kRightI * this._totalRightError +
+                        this.kRightD * (((rightError - this._lastRightError) / this.dt) - velocity) +
                         this.kV * velocity + this.kA * acceleration;
-    this.mLastRightError = rightError;
+    this._lastRightError = rightError;
 
     Vector<Double> updatedState = new Vector<>(2);
     updatedState.set(0, leftValue);
     updatedState.set(1, rightValue);
 
-    this.mCurrentSegment++; // Increment the current segment after all the calculations
+    this._currentSegment++; // Increment the current segment after all the calculations
 
     return updatedState;
   }

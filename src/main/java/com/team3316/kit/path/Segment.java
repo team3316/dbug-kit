@@ -3,35 +3,35 @@ package com.team3316.kit.path;
 import de.siegmar.fastcsv.reader.CsvRow;
 
 public class Segment {
-  private double mTime, mHeading, mLeftDist, mRightDist, mVelocity, mAcceleration;
+  private double _time, _heading, _leftDist, _rightDist, _velocity, _acceleration;
 
   public Segment (CsvRow csv) {
-    this.mTime = Double.parseDouble(csv.getField("time"));
-    this.mHeading = Double.parseDouble(csv.getField("heading"));
-    this.mLeftDist = Double.parseDouble(csv.getField("leftdist"));
-    this.mRightDist = Double.parseDouble(csv.getField("rightdist"));
+    this._time = Double.parseDouble(csv.getField("time"));
+    this._heading = Double.parseDouble(csv.getField("heading"));
+    this._leftDist = Double.parseDouble(csv.getField("leftdist"));
+    this._rightDist = Double.parseDouble(csv.getField("rightdist"));
 
     // TODO - Implement velocity and acceleration feed-forward terms
-    this.mVelocity = 0; this.mAcceleration = 0;
+    this._velocity = 0; this._acceleration = 0;
   }
 
   public double getHeading () {
-    return this.mHeading;
+    return this._heading;
   }
 
   public double getLeftDist () {
-    return this.mLeftDist;
+    return this._leftDist;
   }
 
   public double getRightDist () {
-    return this.mRightDist;
+    return this._rightDist;
   }
 
   public double getVelocity () {
-    return this.mVelocity;
+    return this._velocity;
   }
 
   public double getAcceleration () {
-    return this.mAcceleration;
+    return this._acceleration;
   }
 }

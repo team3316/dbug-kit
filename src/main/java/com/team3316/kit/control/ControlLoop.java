@@ -12,23 +12,23 @@ public abstract class ControlLoop {
    * A control loop timer task
    */
   private static class ControlTask extends TimerTask {
-    private ControlLoop mControlLoop;
+    private ControlLoop _controlLoop;
 
     /**
      * Constructs a new control task
      * @param loop The control loop to control
      */
     public ControlTask (ControlLoop loop) {
-      this.mControlLoop = loop;
+      this._controlLoop = loop;
     }
 
     @Override
     public void run () {
-      Vector<Double> currentState = this.mControlLoop.currentState();
-      Vector<Double> goalState = this.mControlLoop.goalState();
-      Vector<Double> updatedState = this.mControlLoop.update(currentState, goalState);
+      Vector<Double> currentState = this._controlLoop.currentState();
+      Vector<Double> goalState = this._controlLoop.goalState();
+      Vector<Double> updatedState = this._controlLoop.update(currentState, goalState);
 
-      this.mControlLoop.mapUpdateToActuators(updatedState);
+      this._controlLoop.mapUpdateToActuators(updatedState);
     }
   }
 
