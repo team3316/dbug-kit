@@ -1,5 +1,7 @@
 package com.team3316.kit;
 
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Vector;
 
 /**
@@ -40,4 +42,9 @@ public class Util {
     }
     return vec;
   }
+
+  public static String getPathForFile (String filename) {
+    String userHome = System.getProperty("user.home");
+    Path p = Paths.get(userHome, filename);
+    return p.toAbsolutePath().toString();  }
 }
