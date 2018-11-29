@@ -6,8 +6,6 @@ plugins {
 
 group 'com.github.team3316' // Required for JitPack
 
-sourceCompatibility = 1.8
-
 repositories {
     mavenCentral()
     maven {
