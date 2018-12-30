@@ -20,6 +20,8 @@ public abstract class TrajectoryFollower extends ControlLoop {
   public double kRightP, kRightI, kRightD;
   public double kV, kA;
 
+  public double leftTolerance, rightTolerance, angleTolerance;
+
   public double dt = 0.01;
 
   public TimerTask task;
@@ -148,5 +150,13 @@ public abstract class TrajectoryFollower extends ControlLoop {
     this._currentSegment++; // Increment the current segment after all the calculations
 
     return updatedState;
+  }
+
+  @Override
+  public boolean isOnGoal (Vector<Double> currentState, Vector<Double> goalState) {
+    double leftError = goalState.get(0) - currentState.get(0),
+           rightError = goalState.get(1) - currentState.get(1);
+    return Util.isInNeighborhood(leftError, 0, this.leftTolerance) &&
+           Util.isInNeighborhood(rightError, 0, this.rightTolerance);
   }
 }

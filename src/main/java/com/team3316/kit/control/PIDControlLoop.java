@@ -23,6 +23,11 @@ public abstract class PIDControlLoop extends ControlLoop {
   public double dt = 0.01;
 
   /**
+   * Loop goal tolerance
+   */
+  public double tolerance;
+
+  /**
    * Last and total error for the D and I components, respectively
    */
   private double _lastError = 0, _totalError = 0;
@@ -35,6 +40,14 @@ public abstract class PIDControlLoop extends ControlLoop {
   public void setOutputBounds (double low, double high) {
     this.lowOutputBound = low;
     this.highOutputBound = high;
+  }
+
+  /**
+   * Sets the PID goal tolerance.
+   * @param tolerance The goal tolerance of the PID loop
+   */
+  public void setTolerance (double tolerance) {
+    this.tolerance = tolerance;
   }
 
   /**
@@ -68,5 +81,17 @@ public abstract class PIDControlLoop extends ControlLoop {
     double clampedValue = Util.clampToBounds(outputValue, this.lowOutputBound, this.highOutputBound);
 
     return Util.singleValueVector(clampedValue);
+  }
+
+  /**
+   * Checkes whether the PID loop's result has met the goal requirements.
+   * @param currentState The current state, retrieved from the {@link #currentState()} method.
+   * @param goalState The goal state, retrieved using the {@link #goalState()} method.
+   * @return A boolean indicating whether the current error is in a {@link #tolerance} neighborhood of zero.
+   */
+  @Override
+  public boolean isOnGoal (Vector<Double> currentState, Vector<Double> goalState) {
+    double currentError = goalState.get(0) - currentState.get(0);
+    return Util.isInNeighborhood(currentError, 0, this.tolerance);
   }
 }

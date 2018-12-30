@@ -58,6 +58,14 @@ public abstract class ControlLoop {
   public abstract void mapUpdateToActuators (Vector<Double> updatedState);
 
   /**
+   * Checks whether the loop has reached its goal.
+   * @param currentState The current state, retrieved from the {@link #currentState()} method.
+   * @param goalState The goal state, retrieved using the {@link #goalState()} method.
+   * @return A boolean indicating whether the loop has reached its goal.
+   */
+  public abstract boolean isOnGoal (Vector<Double> currentState, Vector<Double> goalState);
+
+  /**
    * Creates a new timer task object for a given control loop.
    * @param loop The loop that's wanted to be executed
    * @return A new ControlTask object.

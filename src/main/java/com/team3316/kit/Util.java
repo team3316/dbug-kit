@@ -20,6 +20,18 @@ public class Util {
   }
 
   /**
+   * Checks whether a given value, x, is in a closed epsilon-neighborhood of limit.
+   * Essentially checking that |x - L| <= Ɛ.
+   * @param x The value to check the existence of in the neighborhood
+   * @param limit The center of the neighborhood
+   * @param epsilon The tolerance of the neighborhood
+   * @return A boolean indicat
+   */
+  public static boolean isInNeighborhood (double x, double limit, double epsilon) {
+    return limit - epsilon <= x && x <= limit + epsilon;
+  }
+
+  /**
    * Create a single valued vector
    * @param val The value to hold in the vector
    * @return A vector holding the given value in index 0
