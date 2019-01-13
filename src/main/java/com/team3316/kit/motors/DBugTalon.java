@@ -38,7 +38,7 @@ public class DBugTalon extends TalonSRX {
     this.configPeakOutputForward(+1, DBugTalon.kTimeout);
     this.configPeakOutputReverse(-1, DBugTalon.kTimeout);
     this.configNeutralDeadband(
-      (int) Config.getInstance().get(configLabel + ".neutralDeadband"),
+      (double) Config.getInstance().get(configLabel + ".neutralDeadband"),
       DBugTalon.kTimeout
     );
 
