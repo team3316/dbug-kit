@@ -8,43 +8,21 @@ group 'com.github.team3316' // Required for JitPack
 
 repositories {
     mavenCentral()
+
     maven {
         url 'http://first.wpi.edu/FRC/roborio/maven/release'
+    }
+
+    maven {
+        url 'http://devsite.ctr-electronics.com/maven/release'
     }
 }
 
 dependencies {
     compile group: 'de.siegmar', name: 'fastcsv', version: '1.0.2'
     compile group: 'edu.wpi.first.wpilibj', name: 'wpilibj-java', version: '2018.4.1'
+    compile group: 'com.ctre.phoenix', name: 'api-java', version: '5.12.0'
+    compile group: 'com.ctre.phoenix', name: 'wpiapi-java', version: '5.12.0'
 
     testCompile group: 'junit', name: 'junit', version: '4.12'
 }
-//
-//task sourcesJar(type: Jar, dependsOn: classes) {
-//    classifier = 'sources'
-//    from sourceSets.main.allSource
-//}
-//
-//task javadocJar(type: Jar, dependsOn: javadoc) {
-//    classifier = 'javadoc'
-//    from javadoc.destinationDir
-//}
-//
-//artifacts {
-//    archives sourcesJar
-//    archives javadocJar
-//}
-//
-//sourceSets {
-//    main {
-//        java {
-//            srcDirs = ['src/main/java']
-//        }
-//    }
-//
-//    test {
-//        java {
-//            srcDirs = ['src/main/java']
-//        }
-//    }
-//}
