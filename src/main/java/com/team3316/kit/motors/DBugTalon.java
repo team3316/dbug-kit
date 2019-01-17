@@ -1,6 +1,5 @@
 package com.team3316.kit.motors;
 
-import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.StatusFrame;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.team3316.kit.config.Config;
@@ -49,6 +48,16 @@ public class DBugTalon extends TalonSRX {
         10,
         DBugTalon.kTimeout
       );
+
+      this.configSelectedFeedbackSensor( // Configs the feedback sensor connected to the talon
+        this._type.getFeedbackDevice(),
+        DBugTalon.kPIDSlot,
+        DBugTalon.kTimeout
+      );
+
+      if (this._type.isRelative()) { // Zero the encoder if using a relative encoder
+        this.setSelectedSensorPosition(0, DBugTalon.kPIDSlot, DBugTalon.kTimeout);
+      }
     }
   }
 
@@ -61,12 +70,12 @@ public class DBugTalon extends TalonSRX {
    *            the gear ratio between the encoder and the end effector. For linear motion, this will
    *            be 2 * pi * r * g, where g is the gear ratio between the encoder and the wheel or drum
    *            and r is the radius of the wheel or drum that's connected to the encoder.
+   * @param upr The number of native units in one revolution of the end effector. This isn't done
+   *            automatically using the encoder type because we found out that for some reason we
+   *            can't calculate this theoretically using the gear ratios.
    */
-  public void setDistancePerRevolution(double dpr) {
+  public void setDistancePerRevolution(double dpr, int upr) {
     if (this._type.isClosedLoop()) {
-      // If the CTRE Mag Encoder is connected, then the UPR is 4096. We only use another type of
-      // encoder (from Bourns) which has 256 CPR -> 1024 UPR.
-      double upr = this._type == TalonType.CLOSED_LOOP_MAG ? 4096 : 1024;
       this._distPerPulse = dpr / upr;
     }
   }
@@ -108,6 +117,13 @@ public class DBugTalon extends TalonSRX {
    * @return The distance that has been passed by the encoder, calculated by the dpr * rawValue.
    */
   public double getVelocity() {
-    return this._distPerPulse * this.getEncoderRate();
+    return this._distPerPulse * this.getEncoderRate() / 1000.0;
+  }
+
+  /**
+   * Zeros the encoder that's attached to the Talon.
+   */
+  public void zeroEncoder() {
+    this.setSelectedSensorPosition(0, DBugTalon.kPIDSlot, DBugTalon.kTimeout);
   }
 }
