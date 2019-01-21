@@ -68,7 +68,7 @@ public class DBugTalon extends TalonSRX {
    * does one revolution.
    * @param dpr The wanted distance per rotation. For angular motion, this will be 360 degrees times
    *            the gear ratio between the encoder and the end effector. For linear motion, this will
-   *            be 2 * pi * r * g, where g is the gear ratio between the encoder and the wheel or drum
+   *            be 2 * pi * r / g, where g is the gear ratio between the encoder and the wheel or drum
    *            and r is the radius of the wheel or drum that's connected to the encoder.
    * @param upr The number of native units in one revolution of the end effector. This isn't done
    *            automatically using the encoder type because we found out that for some reason we
@@ -117,7 +117,7 @@ public class DBugTalon extends TalonSRX {
    * @return The distance that has been passed by the encoder, calculated by the dpr * rawValue.
    */
   public double getVelocity() {
-    return this._distPerPulse * this.getEncoderRate() / 1000.0;
+    return this._distPerPulse * this.getEncoderRate() / 10.0;
   }
 
   /**
