@@ -14,7 +14,7 @@ public class TrajectoryTest extends TestCase {
 
   @Override
   protected void setUp () throws Exception {
-    String csvPath = this.getClass().getResource("/path.csv").getPath();
+    String csvPath = this.getClass().getResource("/trail.csv").getPath();
     File csvFile = new File(csvPath);
     this.trajectory = new Trajectory(csvFile);
 
@@ -27,7 +27,7 @@ public class TrajectoryTest extends TestCase {
   public void testGetLeftTrajectory () {
     double[] leftTraj = this.trajectory.getLeftTrajectory();
     for (int i = 0; i < this.csv.getRowCount(); i++) {
-      double leftDist = Double.parseDouble(this.csv.getRow(i).getField("leftdist"));
+      double leftDist = Double.parseDouble(this.csv.getRow(i).getField("s"));
       assertEquals(leftDist, leftTraj[i]);
     }
   }
