@@ -7,7 +7,7 @@ public class Segment {
 
   public Segment (CsvRow csv) {
     this._time = Double.parseDouble(csv.getField("t"));
-    this._heading = Double.parseDouble(csv.getField("heading"));
+    this._heading = Double.parseDouble(csv.getField("theta"));
     this._centerDist = Double.parseDouble(csv.getField("s"));
     this._velocity = Double.parseDouble(csv.getField("v"));
     this._acceleration = Double.parseDouble(csv.getField("a"));
