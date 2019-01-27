@@ -138,6 +138,7 @@ public class DBugTalon extends TalonSRX {
   }
 
   public void setupPIDF(double kP, double kI, double kD, double kF, int slot) {
+    this.selectProfileSlot(slot, DBugTalon.kTimeout);
     this.config_kP(slot, kP, DBugTalon.kTimeout);
     this.config_kI(slot, kI, DBugTalon.kTimeout);
     this.config_kD(slot, kD, DBugTalon.kTimeout);
@@ -149,6 +150,7 @@ public class DBugTalon extends TalonSRX {
   }
 
   public void setupIZone(int izone, int slot) {
+    this.selectProfileSlot(slot, DBugTalon.kTimeout);
     this.config_IntegralZone(slot, izone, DBugTalon.kTimeout);
   }
 
@@ -156,7 +158,8 @@ public class DBugTalon extends TalonSRX {
     this.setupIZone(izone, DBugTalon.kPIDSlot);
   }
 
-  public void setMotionMagic(double cruiseVel, double cruiseAcc) {
+  public void setMotionMagic(int slot, double cruiseVel, double cruiseAcc) {
+    this.selectProfileSlot(slot, DBugTalon.kTimeout);
     this.configMotionCruiseVelocity((int) Math.round(cruiseVel / (10 * this._distPerPulse)), DBugTalon.kTimeout);
     this.configMotionAcceleration((int) Math.round(cruiseAcc / (10 * this._distPerPulse)), DBugTalon.kTimeout);
   }
