@@ -131,6 +131,15 @@ public class DBugTalon extends TalonSRX {
   }
 
   /**
+   * Returns the current closed loop error, scaled to the wanted input range (aka from native units to
+   * user-defined units that were defined using {@link DBugTalon#setDistancePerRevolution(double, int)}).
+   * @return The current closed loop error in native units, multiplied by the distPerPulse factor.
+   */
+  public double getError() {
+    return this._distPerPulse * this.getClosedLoopError(DBugTalon.kPIDSlot);
+  }
+
+  /**
    * Zeros the encoder that's attached to the Talon.
    */
   public void zeroEncoder() {
