@@ -4,6 +4,7 @@ import com.ctre.phoenix.motorcontrol.StatusFrame;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.team3316.kit.config.Config;
 import com.team3316.kit.config.ConfigException;
+import java.util.Objects;
 
 public class DBugTalon extends TalonSRX {
   private TalonType _type;
@@ -50,7 +51,7 @@ public class DBugTalon extends TalonSRX {
       );
 
       this.configSelectedFeedbackSensor( // Configs the feedback sensor connected to the talon
-        this._type.getFeedbackDevice(),
+        Objects.requireNonNull(this._type.getFeedbackDevice()),
         DBugTalon.kPIDSlot,
         DBugTalon.kTimeout
       );
@@ -111,13 +112,22 @@ public class DBugTalon extends TalonSRX {
   }
 
   /**
+   * Sets the distance stored in the Talon to a given number. The conversion is done using the previously
+   * defined distPerPulse (using the {@link DBugTalon#setDistancePerRevolution(double, int)} method).
+   * @param distance The amount of distance wanted to be set to the selected sensor position
+   */
+  public void setDistance(double distance) {
+    this.setSelectedSensorPosition((int) Math.round(distance / this._distPerPulse), DBugTalon.kPIDSlot, DBugTalon.kTimeout);
+  }
+
+  /**
    * Returns the velocity of the encoder that's connected to the Talon. This returns the value
    * as a *double*, since velocity isn't discrete like native units. In order to get the encoder's
    * raw rate of change, use the {@link DBugTalon#getEncoderRate()} method instead.
    * @return The distance that has been passed by the encoder, calculated by the dpr * rawValue.
    */
   public double getVelocity() {
-    return this._distPerPulse * this.getEncoderRate() / 10.0;
+    return 10.0 * this._distPerPulse * this.getEncoderRate();
   }
 
   /**
@@ -125,5 +135,29 @@ public class DBugTalon extends TalonSRX {
    */
   public void zeroEncoder() {
     this.setSelectedSensorPosition(0, DBugTalon.kPIDSlot, DBugTalon.kTimeout);
+  }
+
+  public void setupPIDF(double kP, double kI, double kD, double kF, int slot) {
+    this.config_kP(slot, kP, DBugTalon.kTimeout);
+    this.config_kI(slot, kI, DBugTalon.kTimeout);
+    this.config_kD(slot, kD, DBugTalon.kTimeout);
+    this.config_kF(slot, kF, DBugTalon.kTimeout);
+  }
+
+  public void setupPIDF(double kP, double kI, double kD, double kF) {
+    this.setupPIDF(kP, kI, kD, kF, DBugTalon.kPIDSlot);
+  }
+
+  public void setupIZone(int izone, int slot) {
+    this.config_IntegralZone(slot, izone, DBugTalon.kTimeout);
+  }
+
+  public void setupIZone(int izone) {
+    this.setupIZone(izone, DBugTalon.kPIDSlot);
+  }
+
+  public void setMotionMagic(double cruiseVel, double cruiseAcc) {
+    this.configMotionCruiseVelocity((int) Math.round(cruiseVel / (10 * this._distPerPulse)), DBugTalon.kTimeout);
+    this.configMotionAcceleration((int) Math.round(cruiseAcc / (10 * this._distPerPulse)), DBugTalon.kTimeout);
   }
 }
