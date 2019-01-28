@@ -10,8 +10,9 @@ public class DBugTalon extends TalonSRX {
   private TalonType _type;
   private double _distPerPulse;
 
-  private static final int kTimeout = 30;
+  public static final int kTimeout = 30;
   private static final int kPIDSlot = 0;
+  private static final int kDefaultSlot = 0;
 
   public DBugTalon(int deviceNumber, TalonType type) throws ConfigException {
     super(deviceNumber);
@@ -147,7 +148,7 @@ public class DBugTalon extends TalonSRX {
   }
 
   public void setupPIDF(double kP, double kI, double kD, double kF, int slot) {
-    this.selectProfileSlot(slot, DBugTalon.kTimeout);
+    this.selectProfileSlot(slot, DBugTalon.kPIDSlot);
     this.config_kP(slot, kP, DBugTalon.kTimeout);
     this.config_kI(slot, kI, DBugTalon.kTimeout);
     this.config_kD(slot, kD, DBugTalon.kTimeout);
@@ -155,16 +156,16 @@ public class DBugTalon extends TalonSRX {
   }
 
   public void setupPIDF(double kP, double kI, double kD, double kF) {
-    this.setupPIDF(kP, kI, kD, kF, DBugTalon.kPIDSlot);
+    this.setupPIDF(kP, kI, kD, kF, DBugTalon.kDefaultSlot);
   }
 
   public void setupIZone(int izone, int slot) {
-    this.selectProfileSlot(slot, DBugTalon.kTimeout);
+    this.selectProfileSlot(slot, DBugTalon.kPIDSlot);
     this.config_IntegralZone(slot, izone, DBugTalon.kTimeout);
   }
 
   public void setupIZone(int izone) {
-    this.setupIZone(izone, DBugTalon.kPIDSlot);
+    this.setupIZone(izone, DBugTalon.kDefaultSlot);
   }
 
   public void setMotionMagic(int slot, double cruiseVel, double cruiseAcc) {
