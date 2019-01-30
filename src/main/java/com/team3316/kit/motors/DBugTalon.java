@@ -147,6 +147,14 @@ public class DBugTalon extends TalonSRX {
     this.setSelectedSensorPosition(0, DBugTalon.kPIDSlot, DBugTalon.kTimeout);
   }
 
+  /**
+   * Configures the Talon's PIDF coefficients for the given profile slot.
+   * @param kP The proportional loop coefficient
+   * @param kI The integral loop coefficient
+   * @param kD The derivative loop coefficient
+   * @param kF The feed-forward loop coefficient
+   * @param slot The profile slot to set the coefficients to
+   */
   public void setupPIDF(double kP, double kI, double kD, double kF, int slot) {
     this.selectProfileSlot(slot, DBugTalon.kPIDSlot);
     this.config_kP(slot, kP, DBugTalon.kTimeout);
@@ -155,20 +163,42 @@ public class DBugTalon extends TalonSRX {
     this.config_kF(slot, kF, DBugTalon.kTimeout);
   }
 
+  /**
+   * Configures the Talon's PIDF coefficients for the default profile slot.
+   * @param kP The proportional loop coefficient
+   * @param kI The integral loop coefficient
+   * @param kD The derivative loop coefficient
+   * @param kF The feed-forward loop coefficient
+   */
   public void setupPIDF(double kP, double kI, double kD, double kF) {
     this.setupPIDF(kP, kI, kD, kF, DBugTalon.kDefaultSlot);
   }
 
+  /**
+   * Configures the Talon's izone (integral zone) for the given profile slot.
+   * @param izone The max izone
+   * @param slot The profile slot to set the izone to
+   */
   public void setupIZone(int izone, int slot) {
     this.selectProfileSlot(slot, DBugTalon.kPIDSlot);
     this.config_IntegralZone(slot, izone, DBugTalon.kTimeout);
   }
 
+  /**
+   * Configures the Talon's izone (integral zone) for the default profile slot.
+   * @param izone The max izone
+   */
   public void setupIZone(int izone) {
     this.setupIZone(izone, DBugTalon.kDefaultSlot);
   }
 
-  public void setMotionMagic(int slot, double cruiseVel, double cruiseAcc) {
+  /**
+   * Configures the Talon's MotionMagic constants for the given profile slot.
+   * @param cruiseVel The cruising velocity constant
+   * @param cruiseAcc The max acceleration constant
+   * @param slot The profile slot to set the MotionMagic constants to
+   */
+  public void setMotionMagic(double cruiseVel, double cruiseAcc, int slot) {
     this.selectProfileSlot(slot, DBugTalon.kTimeout);
     this.configMotionCruiseVelocity((int) Math.round(cruiseVel / (10 * this._distPerPulse)), DBugTalon.kTimeout);
     this.configMotionAcceleration((int) Math.round(cruiseAcc / (10 * this._distPerPulse)), DBugTalon.kTimeout);
