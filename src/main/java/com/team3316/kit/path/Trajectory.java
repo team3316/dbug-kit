@@ -57,4 +57,8 @@ public class Trajectory {
   public Segment getSegment (int index) {
     return this._segments[index];
   }
+
+  public int size () {
+    return this._numOfSegments;
+  }
 }
