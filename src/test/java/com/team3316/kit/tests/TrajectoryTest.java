@@ -27,7 +27,7 @@ public class TrajectoryTest extends TestCase {
   public void testGetLeftTrajectory () {
     double[] leftTraj = this.trajectory.getLeftTrajectory();
     for (int i = 0; i < this.csv.getRowCount(); i++) {
-      double leftDist = Double.parseDouble(this.csv.getRow(i).getField("s"));
+      double leftDist = Double.parseDouble(this.csv.getRow(i).getField("sl"));
       assertEquals(leftDist, leftTraj[i]);
     }
   }
