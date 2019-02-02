@@ -212,6 +212,26 @@ public class DBugTalon extends TalonSRX {
   }
 
   /**
+   * Calculates the amount of native units required to do the given amount of user-defined units
+   * (defined using the {@link DBugTalon#setDistancePerRevolution(double, int)} method).
+   * @param distance The amount of the user-defined units to do
+   * @return The encoder pulses required in order to do it
+   */
+  public int convertDistanceToPulses(double distance) {
+    return (int) Math.round(distance / this._distPerPulse);
+  }
+
+  /**
+   * Calculates the native units per 100ms required to do the given amount of user-defined units per
+   * second (defined using the {@link DBugTalon#setDistancePerRevolution(double, int)} method).
+   * @param velocity The amount of the user-defined units to do in 1s
+   * @return The encoder pulses per 100ms required in order to do it
+   */
+  public int convertVelocityToPulses(double velocity) {
+    return (int) Math.round(velocity / (10 * this._distPerPulse));
+  }
+
+  /**
    * Configures the Talon's MotionMagic constants for the given profile slot.
    * @param cruiseVel The cruising velocity constant
    * @param cruiseAcc The max acceleration constant
