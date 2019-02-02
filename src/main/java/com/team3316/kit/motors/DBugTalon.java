@@ -137,7 +137,7 @@ public class DBugTalon extends TalonSRX {
    * @param distance The amount of distance wanted to be set to the selected sensor position
    */
   public void setDistance(double distance) {
-    this.setSelectedSensorPosition((int) Math.round(distance / this._distPerPulse), DBugTalon.kPIDSlot, DBugTalon.kTimeout);
+    this.setSelectedSensorPosition(this.convertDistanceToPulses(distance), DBugTalon.kPIDSlot, DBugTalon.kTimeout);
   }
 
   /**
