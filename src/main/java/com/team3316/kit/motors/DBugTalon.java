@@ -1,9 +1,13 @@
 package com.team3316.kit.motors;
 
+import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.StatusFrame;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.team3316.kit.config.Config;
 import com.team3316.kit.config.ConfigException;
+import edu.wpi.first.wpilibj.PIDOutput;
+import edu.wpi.first.wpilibj.PIDSource;
+import edu.wpi.first.wpilibj.PIDSourceType;
 import java.util.Objects;
 
 public class DBugTalon extends TalonSRX {
@@ -217,5 +221,61 @@ public class DBugTalon extends TalonSRX {
     this.selectProfileSlot(slot, DBugTalon.kTimeout);
     this.configMotionCruiseVelocity((int) Math.round(cruiseVel / (10 * this._distPerPulse)), DBugTalon.kTimeout);
     this.configMotionAcceleration((int) Math.round(cruiseAcc / (10 * this._distPerPulse)), DBugTalon.kTimeout);
+  }
+
+  /**
+   * @return An instance of WPILib's PIDSource for use with regular PID loops for distance input.
+   */
+  public PIDSource getDistancePIDSource() {
+    return new PIDSource() {
+      @Override
+      public void setPIDSourceType (PIDSourceType pidSource) {
+        // TODO - Maybe implement? Maybe not? Need to check about this.
+      }
+
+      @Override
+      public PIDSourceType getPIDSourceType () {
+        return PIDSourceType.kDisplacement;
+      }
+
+      @Override
+      public double pidGet () {
+        return getDistance();
+      }
+    };
+  }
+
+  /**
+   * @return An instance of WPILib's PIDSource for use with regular PID loops for velocity input.
+   */
+  public PIDSource getVelocityPIDSource() {
+    return new PIDSource() {
+      @Override
+      public void setPIDSourceType (PIDSourceType pidSource) {
+        // TODO - Maybe implement? Maybe not? Need to check about this.
+      }
+
+      @Override
+      public PIDSourceType getPIDSourceType () {
+        return PIDSourceType.kRate;
+      }
+
+      @Override
+      public double pidGet () {
+        return getVelocity();
+      }
+    };
+  }
+
+  /**
+   * @return An instance of WPILib's PIDOutput for use with regular PID loops for percentage output.
+   */
+  public PIDOutput getPercentPIDOutput() {
+    return new PIDOutput() {
+      @Override
+      public void pidWrite (double output) {
+        set(ControlMode.PercentOutput, output);
+      }
+    };
   }
 }
