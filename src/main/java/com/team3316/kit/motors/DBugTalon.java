@@ -7,13 +7,24 @@ import com.team3316.kit.config.ConfigException;
 import java.util.Objects;
 
 public class DBugTalon extends TalonSRX {
+  /*
+   * Private members
+   */
   private TalonType _type;
   private double _distPerPulse;
 
+  /*
+   * Constants
+   */
   public static final int kTimeout = 30;
   private static final int kPIDSlot = 0;
   private static final int kDefaultSlot = 0;
 
+  /**
+   * Constructs a new DBugTalon and configures defaults.
+   * @param deviceNumber The Talon's ID on the CAN chain
+   * @param type The Talon's sensor type (from the {@link TalonType} enum)
+   */
   public DBugTalon(int deviceNumber, TalonType type) throws ConfigException {
     super(deviceNumber);
 
@@ -21,6 +32,10 @@ public class DBugTalon extends TalonSRX {
     this.configure();
   }
 
+  /**
+   * Constructs a new DBugTalon using the regular configuration.
+   * @param deviceNumber The Talon's ID on the CAN chain
+   */
   public DBugTalon(int deviceNumber) throws ConfigException {
     this(deviceNumber, TalonType.REGULAR);
   }
