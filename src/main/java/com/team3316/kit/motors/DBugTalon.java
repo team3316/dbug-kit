@@ -244,6 +244,23 @@ public class DBugTalon extends TalonSRX {
   }
 
   /**
+   * Overrides the {@link TalonSRX#set(ControlMode, double)} method for the ControlMode.Position mode.
+   * @param mode See {@link TalonSRX#set(ControlMode, double)}
+   * @param outputValue If mode == ControlMode.Position, this should be the value defined in distance units. Else, see {@link TalonSRX#set(ControlMode, double)}
+   */
+  @Override
+  public void set (ControlMode mode, double outputValue) {
+    switch (mode) {
+      case Position:
+        super.set(mode, this.convertDistanceToPulses(outputValue));
+        break;
+      default:
+        super.set(mode, outputValue);
+        break;
+    }
+  }
+
+  /**
    * @return An instance of WPILib's PIDSource for use with regular PID loops for distance input.
    */
   public PIDSource getDistancePIDSource() {
