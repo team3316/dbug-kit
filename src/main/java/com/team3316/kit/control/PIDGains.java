@@ -1,5 +1,9 @@
 package com.team3316.kit.control;
 
+import edu.wpi.first.wpilibj.PIDController;
+import edu.wpi.first.wpilibj.PIDOutput;
+import edu.wpi.first.wpilibj.PIDSource;
+
 public class PIDGains {
   private double _kP, _kI, _kD, _tolerance;
 
@@ -24,5 +28,13 @@ public class PIDGains {
 
   public double getTolerance() {
     return this._tolerance;
+  }
+
+  public PIDController createController(PIDSource source, PIDOutput output, double period) {
+    return new PIDController(this._kP, this._kI, this._kD, source, output, period);
+  }
+
+  public PIDController createController(PIDSource source, PIDOutput output) {
+    return this.createController(source, output, 0.02);
   }
 }
