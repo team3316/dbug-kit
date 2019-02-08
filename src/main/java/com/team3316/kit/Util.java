@@ -1,5 +1,6 @@
 package com.team3316.kit;
 
+import edu.wpi.first.wpilibj.Filesystem;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Vector;
@@ -56,7 +57,22 @@ public class Util {
   }
 
   public static String getPathForFile (String filename) {
-    String userHome = System.getProperty("user.home");
-    Path p = Paths.get(userHome, filename);
-    return p.toAbsolutePath().toString();  }
+    String deployDir = Filesystem.getDeployDirectory().getAbsolutePath();
+    Path p = Paths.get(deployDir, filename);
+    return p.toAbsolutePath().toString();
+  }
+
+  public static boolean isOnTarget(double value, double target, double tolerance) {
+    return Math.abs(value - target) <= tolerance;
+  }
+
+  public static double calculateLeftOutput(double yDirection, double xDirection) {
+    double ySign = Math.signum(yDirection), xSign = Math.signum(xDirection);
+    return xSign != ySign ? yDirection : yDirection * (1 - xSign * yDirection);
+  }
+
+  public static double calculateRightOutput(double yDirection, double xDirection) {
+    double ySign = Math.signum(yDirection), xSign = Math.signum(xDirection);
+    return xSign == ySign ? yDirection : yDirection * (1 + xSign * yDirection);
+  }
 }
