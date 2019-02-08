@@ -1,12 +1,13 @@
 package com.team3316.kit.control;
 
 public class PIDGains {
-  private double _kP, _kI, _kD;
+  private double _kP, _kI, _kD, _tolerance;
 
-  public PIDGains(double kP, double kI, double kD) {
+  public PIDGains(double kP, double kI, double kD, double tolerance) {
     this._kP = kP;
     this._kI = kI;
     this._kD = kD;
+    this._tolerance = tolerance;
   }
 
   public double getP() {
@@ -19,5 +20,9 @@ public class PIDGains {
 
   public double getD() {
     return this._kD;
+  }
+
+  public double getTolerance() {
+    return this._tolerance;
   }
 }

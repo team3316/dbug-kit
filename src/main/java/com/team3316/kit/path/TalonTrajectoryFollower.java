@@ -1,6 +1,8 @@
 package com.team3316.kit.path;
 
+import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.kauailabs.navx.frc.AHRS;
+import com.team3316.kit.DBugLogger;
 import com.team3316.kit.Util;
 import com.team3316.kit.control.FFGains;
 import com.team3316.kit.control.PIDGains;
@@ -24,6 +26,7 @@ public class TalonTrajectoryFollower {
   private double _initialAngle;
   private double _leftTotalError = 0, _rightTotalError = 0, _angleTotalError = 0;
   private double _leftLastError = 0, _rightLastError = 0, _angleLastError = 0;
+  private boolean isLoopEnabled = false;
 
   public static final double LOOP_PERIOD = 0.02; // The loop period
 
@@ -39,24 +42,24 @@ public class TalonTrajectoryFollower {
     this._leftGains = gains;
   }
 
-  public void setLeftPIDGains(double kP, double kI, double kD) {
-    this._leftGains = new PIDGains(kP, kI, kD);
+  public void setLeftPIDGains(double kP, double kI, double kD, double tolerance) {
+    this._leftGains = new PIDGains(kP, kI, kD, tolerance);
   }
 
   public void setRightPIDGains(PIDGains gains) {
     this._rightGains = gains;
   }
 
-  public void setRightPIDGains(double kP, double kI, double kD) {
-    this._rightGains = new PIDGains(kP, kI, kD);
+  public void setRightPIDGains(double kP, double kI, double kD, double tolerance) {
+    this._rightGains = new PIDGains(kP, kI, kD, tolerance);
   }
 
   public void setAnglePIDGains(PIDGains gains) {
     this._angleGains = gains;
   }
 
-  public void setAnglePIDGains(double kP, double kI, double kD) {
-    this._angleGains = new PIDGains(kP, kI, kD);
+  public void setAnglePIDGains(double kP, double kI, double kD, double tolerance) {
+    this._angleGains = new PIDGains(kP, kI, kD, tolerance);
   }
 
   public void setFFGains(FFGains gains) {
@@ -75,53 +78,86 @@ public class TalonTrajectoryFollower {
   }
 
   private void calculate() {
-    Segment currentSegment = this._trajectory.getSegment(this._currentSegment);
+    if (this.isLoopEnabled) {
+      Segment currentSegment = this._trajectory.getSegment(this._currentSegment);
 
-    double currentAngle = this._initialAngle - this._navx.getYaw();
-    double leftError = currentSegment.getLeftDist() - this._leftMaster.getDistance(),
-           rightError = currentSegment.getRightDist() - this._rightMaster.getDistance(),
-           angleError = currentSegment.getHeading() - currentAngle;
+      double currentAngle = this._initialAngle - this._navx.getYaw();
+      double leftError = currentSegment.getLeftDist() - this._leftMaster.getDistance(),
+        rightError = currentSegment.getRightDist() - this._rightMaster.getDistance(),
+        angleError = currentSegment.getHeading() - currentAngle;
 
-    /*
-     * Integral calculations
-     * PID Output interval is [-1/kI, 1/kI]
-     */
-    if (this._leftGains.getI() > 0) {
-      double kI = this._leftGains.getI();
-      double low = -1 / kI, high = 1 / kI;
-      double newTotalLeftError = this._leftTotalError + leftError;
+      /*
+       * Integral calculations
+       * PID Output interval is [-1/kI, 1/kI]
+       */
+      if (this._leftGains.getI() > 0) {
+        double kI = this._leftGains.getI();
+        double low = -1 / kI, high = 1 / kI;
+        double newTotalLeftError = this._leftTotalError + leftError;
 
-      this._leftTotalError = Util.clampToBounds(newTotalLeftError, low, high);
+        this._leftTotalError = Util.clampToBounds(newTotalLeftError, low, high);
+      }
+
+      if (this._rightGains.getI() > 0) {
+        double kI = this._rightGains.getI();
+        double low = -1 / kI, high = 1 / kI;
+        double newTotalRightError = this._rightTotalError + rightError;
+
+        this._rightTotalError = Util.clampToBounds(newTotalRightError, low, high);
+      }
+
+      if (this._angleGains.getI() > 0) {
+        double kI = this._leftGains.getI();
+        double low = -1 / kI, high = 1 / kI;
+        double newTotalAngleError = this._angleTotalError + angleError;
+
+        this._angleTotalError = Util.clampToBounds(newTotalAngleError, low, high);
+      }
+
+      /*
+       * PIDVA calculations
+       * PID + feed-forward velocity and acceleration terms.
+       */
+      double ffTerm = this._feedForwardGains == null ? 0 : this._feedForwardGains.getV() * currentSegment.getVelocity() +
+        this._feedForwardGains.getA() * currentSegment.getAcceleration();
+      double leftValue = this.calculatePID(leftError, _leftTotalError, _leftLastError, this._leftGains) + ffTerm;
+      double rightValue = this.calculatePID(rightError, _rightTotalError, _rightLastError, this._rightGains) + ffTerm;
+      double angleValue = this.calculatePID(angleError, _angleTotalError, _angleLastError, this._angleGains);
+
+      this._leftMaster.set(ControlMode.PercentOutput, Util.calculateLeftOutput(leftValue, angleValue));
+      this._rightMaster.set(ControlMode.PercentOutput, Util.calculateRightOutput(rightValue, angleValue));
+
+      this._currentSegment++;
     }
-
-    if (this._rightGains.getI() > 0) {
-      double kI = this._rightGains.getI();
-      double low = -1 / kI, high = 1 / kI;
-      double newTotalRightError = this._rightTotalError + rightError;
-
-      this._rightTotalError = Util.clampToBounds(newTotalRightError, low, high);
-    }
-
-    if (this._angleGains.getI() > 0) {
-      double kI = this._leftGains.getI();
-      double low = -1 / kI, high = 1 / kI;
-      double newTotalAngleError = this._angleTotalError + angleError;
-
-      this._angleTotalError = Util.clampToBounds(newTotalAngleError, low, high);
-    }
-
-    /*
-     * PIDVA calculations
-     * PID + feed-forward velocity and acceleration terms.
-     */
-    double ffTerm = this._feedForwardGains.getV() * currentSegment.getVelocity() +
-                    this._feedForwardGains.getA() * currentSegment.getAcceleration();
-    double leftValue = this.calculatePID(leftError, _leftTotalError, _leftLastError, this._leftGains) + ffTerm;
-    double rightValue = this.calculatePID(rightError, _rightTotalError, _rightLastError, this._rightGains) + ffTerm;
-    double angleValue = this.calculatePID(angleError, _angleTotalError, _angleLastError, this._angleGains);
   }
 
   private void loop() {
+    if (this._currentSegment < this._trajectory.size() && this.isLoopEnabled) {
+      this.calculate();
+    }
+  }
 
+  public void start() {
+    if (this._leftGains != null && this._rightGains != null && this._angleGains != null) {
+      DBugLogger.getInstance().info("Starting PID...");
+      this._notifier.startPeriodic(TalonTrajectoryFollower.LOOP_PERIOD);
+      DBugLogger.getInstance().info("PID Started!");
+    } else {
+      DBugLogger.getInstance().severe("Gains are missing! Check that they're in place and try again.");
+    }
+  }
+
+  public void enable() {
+    this.isLoopEnabled = true;
+  }
+
+  public void disable() {
+    this.isLoopEnabled = false;
+    this._leftMaster.set(ControlMode.PercentOutput, 0);
+    this._rightMaster.set(ControlMode.PercentOutput, 0);
+  }
+
+  public boolean hasFinished() {
+    return this._currentSegment >= this._trajectory.size();
   }
 }
