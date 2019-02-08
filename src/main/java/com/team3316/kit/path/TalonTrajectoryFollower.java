@@ -21,8 +21,9 @@ public class TalonTrajectoryFollower {
   private int _currentSegment = 0;
   private PIDGains _leftGains = null, _rightGains = null, _angleGains = null;
   private FFGains _feedForwardGains = null;
-  private double _initialAngle, _leftSetpoint, _rightSetpoint, _angleSetpoint;
+  private double _initialAngle;
   private double _leftTotalError = 0, _rightTotalError = 0, _angleTotalError = 0;
+  private double _leftLastError = 0, _rightLastError = 0, _angleLastError = 0;
 
   public static final double LOOP_PERIOD = 0.02; // The loop period
 
@@ -66,13 +67,20 @@ public class TalonTrajectoryFollower {
     this._feedForwardGains = new FFGains(1 / maxVelocity, 1 / maxAcceleration);
   }
 
-  private void calculate() {
-    double currentAngle = this._initialAngle - this._navx.getYaw();
-    double leftError = this._leftSetpoint - this._leftMaster.getDistance(),
-           rightError = this._rightSetpoint - this._rightMaster.getDistance(),
-           angleError = this._angleSetpoint - currentAngle;
+  private double calculatePID(double error, double totalError, double lastError, PIDGains gains) {
+    double P = gains.getP() * error;
+    double I = gains.getI() * totalError;
+    double D = gains.getD() * (error - lastError) / LOOP_PERIOD;
+    return P + I + D;
+  }
 
+  private void calculate() {
     Segment currentSegment = this._trajectory.getSegment(this._currentSegment);
+
+    double currentAngle = this._initialAngle - this._navx.getYaw();
+    double leftError = currentSegment.getLeftDist() - this._leftMaster.getDistance(),
+           rightError = currentSegment.getRightDist() - this._rightMaster.getDistance(),
+           angleError = currentSegment.getHeading() - currentAngle;
 
     /*
      * Integral calculations
@@ -94,11 +102,23 @@ public class TalonTrajectoryFollower {
       this._rightTotalError = Util.clampToBounds(newTotalRightError, low, high);
     }
 
+    if (this._angleGains.getI() > 0) {
+      double kI = this._leftGains.getI();
+      double low = -1 / kI, high = 1 / kI;
+      double newTotalAngleError = this._angleTotalError + angleError;
+
+      this._angleTotalError = Util.clampToBounds(newTotalAngleError, low, high);
+    }
+
     /*
      * PIDVA calculations
      * PID + feed-forward velocity and acceleration terms.
      */
-    
+    double ffTerm = this._feedForwardGains.getV() * currentSegment.getVelocity() +
+                    this._feedForwardGains.getA() * currentSegment.getAcceleration();
+    double leftValue = this.calculatePID(leftError, _leftTotalError, _leftLastError, this._leftGains) + ffTerm;
+    double rightValue = this.calculatePID(rightError, _rightTotalError, _rightLastError, this._rightGains) + ffTerm;
+    double angleValue = this.calculatePID(angleError, _angleTotalError, _angleLastError, this._angleGains);
   }
 
   private void loop() {
