@@ -1,5 +1,6 @@
 package com.team3316.kit.path;
 
+import com.team3316.kit.Util;
 import de.siegmar.fastcsv.reader.CsvContainer;
 import de.siegmar.fastcsv.reader.CsvReader;
 import java.io.File;
@@ -60,5 +61,9 @@ public class Trajectory {
 
   public int size () {
     return this._numOfSegments;
+  }
+
+  public static Trajectory fromFilename(String filename) throws IOException {
+    return new Trajectory(Util.getPathForFile(filename));
   }
 }
