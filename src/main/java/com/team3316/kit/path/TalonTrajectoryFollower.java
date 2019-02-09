@@ -126,6 +126,9 @@ public class TalonTrajectoryFollower {
        */
       double ffTerm = this._feedForwardGains == null ? 0 : this._feedForwardGains.getV() * currentSegment.getVelocity() +
         this._feedForwardGains.getA() * currentSegment.getAcceleration();
+      if (this._verbose)
+        DBugLogger.getInstance().info("FF Term: " + ffTerm);
+
       double leftValue = this.calculatePID(leftError, _leftTotalError, _leftLastError, this._leftGains) + ffTerm;
       double rightValue = this.calculatePID(rightError, _rightTotalError, _rightLastError, this._rightGains) + ffTerm;
       double angleValue = this.calculatePID(angleError, _angleTotalError, _angleLastError, this._angleGains);
@@ -144,6 +147,10 @@ public class TalonTrajectoryFollower {
     if (this._currentSegment < this._trajectory.size() && this.isLoopEnabled) {
       this.calculate();
     }
+  }
+
+  public void setVerbose(boolean shouldLog) {
+    this._verbose = shouldLog;
   }
 
   public void start() {
