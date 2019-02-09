@@ -73,12 +73,34 @@ public class Util {
   }
 
   public static double calculateLeftOutput(double yDirection, double xDirection) {
-    double ySign = Math.signum(yDirection), xSign = Math.signum(xDirection);
-    return xSign != ySign ? yDirection : yDirection * (1 - xSign * yDirection);
+    if (yDirection > 0) { // Forward
+      if (xDirection > 0) { // Swerving right
+        return yDirection * (1 - xDirection);
+      } else {
+        return yDirection;
+      }
+    } else { // Backward
+      if (xDirection < 0) { // Swerving right
+        return yDirection * (1 + xDirection);
+      } else {
+        return yDirection;
+      }
+    }
   }
 
   public static double calculateRightOutput(double yDirection, double xDirection) {
-    double ySign = Math.signum(yDirection), xSign = Math.signum(xDirection);
-    return xSign == ySign ? yDirection : yDirection * (1 + xSign * yDirection);
+    if (yDirection > 0) { // Forward
+      if (xDirection < 0) { // Swerving right
+        return yDirection * (1 - xDirection);
+      } else {
+        return yDirection;
+      }
+    } else { // Backward
+      if (xDirection > 0) { // Swerving right
+        return yDirection * (1 + xDirection);
+      } else {
+        return yDirection;
+      }
+    }
   }
 }
