@@ -26,7 +26,7 @@ public class TalonTrajectoryFollower {
   private double _initialAngle;
   private double _leftTotalError = 0, _rightTotalError = 0, _angleTotalError = 0;
   private double _leftLastError = 0, _rightLastError = 0, _angleLastError = 0;
-  private boolean isLoopEnabled = false;
+  private boolean isLoopEnabled = false, _verbose = false;
 
   public static final double LOOP_PERIOD = 0.02; // The loop period
 
@@ -79,12 +79,18 @@ public class TalonTrajectoryFollower {
 
   private void calculate() {
     if (this.isLoopEnabled) {
+      if (this._verbose)
+        DBugLogger.getInstance().info("Calculating PID. Current Segment: " + this._currentSegment);
+
       Segment currentSegment = this._trajectory.getSegment(this._currentSegment);
 
       double currentAngle = this._initialAngle - this._navx.getYaw();
       double leftError = currentSegment.getLeftDist() - this._leftMaster.getDistance(),
         rightError = currentSegment.getRightDist() - this._rightMaster.getDistance(),
         angleError = currentSegment.getHeading() - currentAngle;
+
+      if (this._verbose)
+        DBugLogger.getInstance().info("Left Error: " + leftError + ", Right Error: " + rightError);
 
       /*
        * Integral calculations
@@ -123,6 +129,9 @@ public class TalonTrajectoryFollower {
       double leftValue = this.calculatePID(leftError, _leftTotalError, _leftLastError, this._leftGains) + ffTerm;
       double rightValue = this.calculatePID(rightError, _rightTotalError, _rightLastError, this._rightGains) + ffTerm;
       double angleValue = this.calculatePID(angleError, _angleTotalError, _angleLastError, this._angleGains);
+
+      if (this._verbose)
+        DBugLogger.getInstance().info("PID Left: " + leftValue + ", PID Right: " + rightValue);
 
       this._leftMaster.set(ControlMode.PercentOutput, Util.calculateLeftOutput(leftValue, angleValue));
       this._rightMaster.set(ControlMode.PercentOutput, Util.calculateRightOutput(rightValue, angleValue));
