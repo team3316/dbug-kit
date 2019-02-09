@@ -64,6 +64,6 @@ public class Trajectory {
   }
 
   public static Trajectory fromFilename(String filename) throws IOException {
-    return new Trajectory(Util.getPathForFile(filename));
+    return new Trajectory(Util.getPathForDeployedFile(filename));
   }
 }

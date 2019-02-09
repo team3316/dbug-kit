@@ -57,6 +57,12 @@ public class Util {
   }
 
   public static String getPathForFile (String filename) {
+    String userHome = System.getProperty("user.home");
+    Path p = Paths.get(userHome, filename);
+    return p.toAbsolutePath().toString();
+  }
+
+  public static String getPathForDeployedFile(String filename) {
     String deployDir = Filesystem.getDeployDirectory().getAbsolutePath();
     Path p = Paths.get(deployDir, filename);
     return p.toAbsolutePath().toString();
