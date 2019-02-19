@@ -8,7 +8,7 @@ public abstract class DBugSubsystem extends Subsystem {
 
   public abstract void initDefaultCommand();
 
-  public void displayTestData() throws ConfigException {}
-  public void displayMatchData() throws ConfigException {}
-  public void displayCommands() throws ConfigException {}
+  public abstract void displayTestData();
+  public abstract void displayMatchData();
+  public abstract void displayCommands();
 }
