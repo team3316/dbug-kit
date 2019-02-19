@@ -9,4 +9,5 @@ public abstract class DBugSubsystem extends Subsystem {
 
   public abstract void displayTestData();
   public abstract void displayMatchData();
+  public abstract void displayCommands();
 }
