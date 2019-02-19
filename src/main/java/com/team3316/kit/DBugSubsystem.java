@@ -5,5 +5,8 @@ import edu.wpi.first.wpilibj.command.Subsystem;
 public abstract class DBugSubsystem extends Subsystem {
   DBugLogger logger = DBugLogger.getInstance();
 
-  public abstract void initDefaultCommand ();
+  public abstract void initDefaultCommand();
+
+  public abstract void displayTestData();
+  public abstract void displayMatchData();
 }
