@@ -26,6 +26,8 @@ repositories {
     }
 }
 
+sourceCompatibility = 1.8
+
 dependencies {
     implementation group: 'de.siegmar', name: 'fastcsv', version: '1.0.2'
     implementation group: 'edu.wpi.first.wpilibj', name: 'wpilibj-java', version: '2019.2.1'
