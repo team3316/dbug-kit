@@ -6,11 +6,9 @@ import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.team3316.kit.config.Config;
 import com.team3316.kit.config.ConfigException;
 import edu.wpi.first.wpilibj.PIDOutput;
-import edu.wpi.first.wpilibj.PIDSource;
-import edu.wpi.first.wpilibj.PIDSourceType;
 import java.util.Objects;
 
-public class DBugTalon extends TalonSRX {
+public class DBugTalon extends TalonSRX implements DBugMotorController {
   /*
    * Private members
    */
@@ -49,7 +47,8 @@ public class DBugTalon extends TalonSRX {
    * @throws ConfigException If something won't be found in the robot's config, a ConfigException will
    *                         be thrown.
    */
-  private void configure() throws ConfigException {
+  @Override
+  public void configure () throws ConfigException {
     String configLabel = this._type.getConfigLabel();
 
     // General configurations
@@ -95,6 +94,7 @@ public class DBugTalon extends TalonSRX {
    *            automatically using the encoder type because we found out that for some reason we
    *            can't calculate this theoretically using the gear ratios.
    */
+  @Override
   public void setDistancePerRevolution(double dpr, int upr) {
     if (this._type.isClosedLoop()) {
       this._distPerPulse = dpr / upr;
@@ -107,8 +107,9 @@ public class DBugTalon extends TalonSRX {
    * passed, use the {@link DBugTalon#getDistance()} method instead.
    * @return The raw relative encoder value from the Talon in native units
    */
-  public int getEncoderValue() {
-    return this.getSelectedSensorPosition(DBugTalon.kPIDSlot);
+  @Override
+  public double getEncoderValue() {
+    return (double) this.getSelectedSensorPosition(DBugTalon.kPIDSlot);
   }
 
   /**
@@ -117,8 +118,9 @@ public class DBugTalon extends TalonSRX {
    * In order to get the distance passed, use the {@link DBugTalon#getVelocity()} method instead.
    * @return The raw relative encoder rate from the Talon in native units for a period of 10ms
    */
-  public int getEncoderRate() {
-    return this.getSelectedSensorVelocity(DBugTalon.kPIDSlot);
+  @Override
+  public double getEncoderRate() {
+    return (double) this.getSelectedSensorVelocity(DBugTalon.kPIDSlot);
   }
 
   /**
@@ -127,6 +129,7 @@ public class DBugTalon extends TalonSRX {
    * value, use the {@link DBugTalon#getEncoderValue()} method instead.
    * @return The distance that has been passed by the encoder, calculated by the dpr * rawValue.
    */
+  @Override
   public double getDistance() {
     return this._distPerPulse * this.getEncoderValue();
   }
@@ -136,6 +139,7 @@ public class DBugTalon extends TalonSRX {
    * defined distPerPulse (using the {@link DBugTalon#setDistancePerRevolution(double, int)} method).
    * @param distance The amount of distance wanted to be set to the selected sensor position
    */
+  @Override
   public void setDistance(double distance) {
     this.setSelectedSensorPosition(this.convertDistanceToPulses(distance), DBugTalon.kPIDSlot, DBugTalon.kTimeout);
   }
@@ -146,6 +150,7 @@ public class DBugTalon extends TalonSRX {
    * raw rate of change, use the {@link DBugTalon#getEncoderRate()} method instead.
    * @return The distance that has been passed by the encoder, calculated by the dpr * rawValue.
    */
+  @Override
   public double getVelocity() {
     return 10.0 * this._distPerPulse * this.getEncoderRate();
   }
@@ -162,6 +167,7 @@ public class DBugTalon extends TalonSRX {
   /**
    * Zeros the encoder that's attached to the Talon.
    */
+  @Override
   public void zeroEncoder() {
     this.setSelectedSensorPosition(0, DBugTalon.kPIDSlot, DBugTalon.kTimeout);
   }
@@ -189,6 +195,7 @@ public class DBugTalon extends TalonSRX {
    * @param kD The derivative loop coefficient
    * @param kF The feed-forward loop coefficient
    */
+  @Override
   public void setupPIDF(double kP, double kI, double kD, double kF) {
     this.setupPIDF(kP, kI, kD, kF, DBugTalon.kDefaultSlot);
   }
@@ -261,58 +268,9 @@ public class DBugTalon extends TalonSRX {
   }
 
   /**
-   * @return An instance of WPILib's PIDSource for use with regular PID loops for distance input.
-   */
-  public PIDSource getDistancePIDSource() {
-    return new PIDSource() {
-      @Override
-      public void setPIDSourceType (PIDSourceType pidSource) {
-        // TODO - Maybe implement? Maybe not? Need to check about this.
-      }
-
-      @Override
-      public PIDSourceType getPIDSourceType () {
-        return PIDSourceType.kDisplacement;
-      }
-
-      @Override
-      public double pidGet () {
-        return getDistance();
-      }
-    };
-  }
-
-  /**
-   * @return An instance of WPILib's PIDSource for use with regular PID loops for velocity input.
-   */
-  public PIDSource getVelocityPIDSource() {
-    return new PIDSource() {
-      @Override
-      public void setPIDSourceType (PIDSourceType pidSource) {
-        // TODO - Maybe implement? Maybe not? Need to check about this.
-      }
-
-      @Override
-      public PIDSourceType getPIDSourceType () {
-        return PIDSourceType.kRate;
-      }
-
-      @Override
-      public double pidGet () {
-        return getVelocity();
-      }
-    };
-  }
-
-  /**
    * @return An instance of WPILib's PIDOutput for use with regular PID loops for percentage output.
    */
   public PIDOutput getPercentPIDOutput() {
-    return new PIDOutput() {
-      @Override
-      public void pidWrite (double output) {
-        set(ControlMode.PercentOutput, output);
-      }
-    };
+    return output -> set(ControlMode.PercentOutput, output);
   }
 }
