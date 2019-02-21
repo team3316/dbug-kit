@@ -20,6 +20,10 @@ repositories {
     maven {
         url 'http://www.kauailabs.com/maven2'
     }
+
+    maven {
+        url 'http://www.revrobotics.com/content/sw/max/sdk/maven/'
+    }
 }
 
 dependencies {
@@ -28,6 +32,8 @@ dependencies {
     implementation group: 'com.ctre.phoenix', name: 'api-java', version: '5.12.0'
     implementation group: 'com.ctre.phoenix', name: 'wpiapi-java', version: '5.12.0'
     implementation group: 'com.kauailabs.navx.frc', name: 'navx-java', version: '3.1.366'
+    implementation group: 'com.revrobotics.frc', name: 'SparkMax-java', version: '1.1.9'
+    implementation group: 'com.revrobotics.frc', name: 'SparkMax-driver', version: '1.1.9'
 
     testImplementation group: 'junit', name: 'junit', version: '4.12'
 }
