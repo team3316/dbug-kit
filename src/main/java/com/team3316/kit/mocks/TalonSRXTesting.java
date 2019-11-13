@@ -26,18 +26,18 @@ import edu.wpi.first.wpilibj.PIDOutput;
 
 public class TalonSRXTesting extends DBugTalon implements IMotorController {
 
-  private int _id;
-  private IMotorController _following;
-  private ControlMode _controlMode;
-  private double _demand, _sensorValue, _distPerPulse;
-  private NeutralMode _neutralMode;
+  	private int _id;
+  	private IMotorController _following;
+  	private ControlMode _controlMode;
+  	private double _demand, _sensorValue, _distPerPulse;
+	private NeutralMode _neutralMode;
 	private boolean _phaseSensor, _invertad;
 
 	public TalonSRXTesting(int id, TalonType type) throws ConfigException {
 		super(id, type);
-  }
+  	}
 
-  public TalonSRXTesting(int id) throws ConfigException {
+  	public TalonSRXTesting(int id) throws ConfigException {
 		super(id);
 	}
 	
