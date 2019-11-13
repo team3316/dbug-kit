@@ -1,4 +1,4 @@
-package com.team3316.robot.utils;
+package com.team3316.kit.mocks;
 
 import edu.wpi.first.wpilibj.DigitalInput;
 
