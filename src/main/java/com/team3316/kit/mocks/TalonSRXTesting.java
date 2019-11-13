@@ -45,6 +45,11 @@ public class TalonSRXTesting extends DBugTalon implements IMotorController {
 	public void configure() { }
 
 	@Override
+  	public double getDistance() {
+    	return this._demand;
+  	}
+
+	@Override
 	public PIDOutput getPercentPIDOutput() {
 		return null;
 	}
