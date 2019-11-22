@@ -10,8 +10,8 @@ import com.team3316.kit.config.ConfigException;
 import edu.wpi.first.wpilibj.PIDOutput;
 
 public class DBugSparkMax extends CANSparkMax implements DBugMotorController {
-  private CANEncoder _encoder;
-  private CANPIDController _pidController;
+  private final CANEncoder _encoder;
+  private final CANPIDController _pidController;
   private double _distPerRevolution;
 
   /**
@@ -22,11 +22,13 @@ public class DBugSparkMax extends CANSparkMax implements DBugMotorController {
    *                 must be connected to their matching color and the hall sensor
    *                 plugged in. Brushed motors must be connected to the Red and
    */
-  public DBugSparkMax(int deviceNumber, MotorType type) {
+  public DBugSparkMax(final int deviceNumber, final MotorType type) {
     super(deviceNumber, type);
 
     this._encoder = this.getEncoder();
     this._pidController = this.getPIDController();
+    
+    this.restoreFactoryDefaults();
   }
 
   /**
@@ -34,7 +36,7 @@ public class DBugSparkMax extends CANSparkMax implements DBugMotorController {
    * since we usually use CTRE controllers for brushed motors
    * @param deviceNumber The CAN device ID.
    */
-  public DBugSparkMax(int deviceNumber) {
+  public DBugSparkMax(final int deviceNumber) {
     this(deviceNumber, MotorType.kBrushless);
   }
 
@@ -44,7 +46,7 @@ public class DBugSparkMax extends CANSparkMax implements DBugMotorController {
   }
 
   @Override
-  public void setDistancePerRevolution (double dpr, int upr) {
+  public void setDistancePerRevolution (final double dpr, final int upr) {
     this._distPerRevolution = dpr;
   }
 
@@ -69,13 +71,18 @@ public class DBugSparkMax extends CANSparkMax implements DBugMotorController {
   }
 
   @Override
-  public void setDistance (double distance) {
+  public void setDistance (final double distance) {
     this._encoder.setPosition(distance / this._distPerRevolution);
   }
 
   @Override
-  public void setupPIDF (double kP, double kI, double kD, double kF) {
+  public void setupPIDF (final double kP, final double kI, final double kD, final double kF) {
     this._pidController.setP(kP);
+    this._pidController.setI(kI);
+    this._pidController.setD(kD);
+    this._pidController.setFF(kF);
+    this._pidController.setFF(0.0);
+    this._pidController.setOutputRange(-1.0, 1.0);
   }
 
   @Override
@@ -84,8 +91,8 @@ public class DBugSparkMax extends CANSparkMax implements DBugMotorController {
   }
 
   @Override
-  public void setNeutralMode (NeutralMode mode) {
-    IdleMode idleModeFromNeutralMode = mode == NeutralMode.Brake ? IdleMode.kBrake : IdleMode.kCoast;
+  public void setNeutralMode (final NeutralMode mode) {
+    final IdleMode idleModeFromNeutralMode = mode == NeutralMode.Brake ? IdleMode.kBrake : IdleMode.kCoast;
     this.setIdleMode(idleModeFromNeutralMode);
   }
 
@@ -94,7 +101,7 @@ public class DBugSparkMax extends CANSparkMax implements DBugMotorController {
     return this; // REMARK - The Spark MAX implements the PIDOutput interface
   }
 
-  public void set(ControlMode mode, double outputValue) {
+  public void set(final ControlMode mode, final double outputValue) {
     switch (mode) {
       case Position:
         this._pidController.setReference(outputValue, ControlType.kPosition);
