@@ -92,7 +92,7 @@ public class DBugSparkMax extends CANSparkMax implements DBugMotorController {
 
   @Override
   public void setNeutralMode (NeutralMode mode) {
-    final IdleMode idleModeFromNeutralMode = mode == NeutralMode.Brake ? IdleMode.kBrake : IdleMode.kCoast;
+    IdleMode idleModeFromNeutralMode = mode == NeutralMode.Brake ? IdleMode.kBrake : IdleMode.kCoast;
     this.setIdleMode(idleModeFromNeutralMode);
   }
 
@@ -101,7 +101,7 @@ public class DBugSparkMax extends CANSparkMax implements DBugMotorController {
     return this; // REMARK - The Spark MAX implements the PIDOutput interface
   }
 
-  public void set(final ControlMode mode, final double outputValue) {
+  public void set(ControlMode mode, double outputValue) {
     switch (mode) {
       case Position:
         this._pidController.setReference(outputValue, ControlType.kPosition);
