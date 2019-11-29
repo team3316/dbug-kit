@@ -35,8 +35,8 @@ dependencies {
     implementation group: 'com.ctre.phoenix', name: 'api-java', version: '5.14.1'
     implementation group: 'com.ctre.phoenix', name: 'wpiapi-java', version: '5.14.1'
     implementation group: 'com.kauailabs.navx.frc', name: 'navx-java', version: '3.1.367'
-    implementation group: 'com.revrobotics.frc', name: 'SparkMax-java', version: '1.1.9'
-    implementation group: 'com.revrobotics.frc', name: 'SparkMax-driver', version: '1.1.9'
+    implementation group: 'com.revrobotics.frc', name: 'SparkMax-java', version: '1.4.0'
+    implementation group: 'com.revrobotics.frc', name: 'SparkMax-driver', version: '1.4.0'
 
     testImplementation group: 'junit', name: 'junit', version: '4.12'
 }
