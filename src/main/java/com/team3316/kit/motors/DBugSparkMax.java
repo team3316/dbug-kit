@@ -27,6 +27,8 @@ public class DBugSparkMax extends CANSparkMax implements DBugMotorController {
 
     this._encoder = this.getEncoder();
     this._pidController = this.getPIDController();
+    
+    this.restoreFactoryDefaults();
   }
 
   /**
@@ -76,6 +78,11 @@ public class DBugSparkMax extends CANSparkMax implements DBugMotorController {
   @Override
   public void setupPIDF (double kP, double kI, double kD, double kF) {
     this._pidController.setP(kP);
+    this._pidController.setI(kI);
+    this._pidController.setD(kD);
+    this._pidController.setFF(kF);
+    this._pidController.setFF(0.0);
+    this._pidController.setOutputRange(-1.0, 1.0);
   }
 
   @Override
