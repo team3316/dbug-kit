@@ -31,5 +31,7 @@ public abstract class DBugCommand extends Command {
   }
 
   protected abstract void interr ();
+
+  public abstract void test ();
 }
 
