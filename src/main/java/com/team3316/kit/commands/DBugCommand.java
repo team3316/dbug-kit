@@ -12,26 +12,24 @@ public abstract class DBugCommand extends Command {
     init();
   }
 
-  protected abstract void init ();
+  public abstract void init ();
 
-  protected abstract void execute ();
+  public abstract void execute ();
 
-  protected abstract boolean isFinished ();
+  public abstract boolean isFinished ();
 
   protected final void end () {
     DBugLogger.getInstance().fine(this.getName() + " end");
     fin();
   }
 
-  protected abstract void fin ();
+  public abstract void fin ();
 
   protected final void interrupted () {
     DBugLogger.getInstance().fine(this.getName() + " interrupted");
     interr();
   }
 
-  protected abstract void interr ();
-
-  public abstract void test ();
+  public abstract void interr ();
 }
 
