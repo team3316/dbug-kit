@@ -105,4 +105,45 @@ public class DBugLogger extends Logger {
     String exceptionStackTrace = sw.toString();
     super.severe(e.getMessage() + ":" + exceptionStackTrace);
   }
+
+  /**
+   * Logs an object's toString() to the FINEST level log.
+   * @param obj the object to log
+   */
+  public void finest (Object obj) {
+    super.finest(obj.toString());
+  }
+
+  /**
+   * Logs an object's toString() to the FINER level log.
+   * @param obj the object to log
+   */
+
+  public void finer (Object obj) {
+    super.finer(obj.toString());
+  }
+
+  /**
+   * Logs an object's toString() to the FINE level log.
+   * @param obj the object to log
+   */
+  public void fine (Object obj) {
+    super.fine(obj.toString());
+  }
+
+  /**
+   * Logs an object's toString() to the INFO level log.
+   * @param obj the object to log
+   */
+  public void info (Object obj) {
+    super.info(obj.toString());
+  }
+
+  /**
+   * Logs an object's toString() to the CONFIG level log.
+   * @param obj the object to log
+   */
+  public void config (Object obj) {
+    super.config(obj.toString());
+  }
 }

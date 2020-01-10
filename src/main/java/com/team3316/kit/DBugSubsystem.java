@@ -1,8 +1,12 @@
 package com.team3316.kit;
 
-import edu.wpi.first.wpilibj.command.Subsystem;
+import com.team3316.kit.DBugLogger;
 
-public abstract class DBugSubsystem extends Subsystem {
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
+
+
+public abstract class DBugSubsystem extends SubsystemBase {
+  DBugLogger logger = DBugLogger.getInstance();
 
   public abstract void initDefaultCommand();
 
