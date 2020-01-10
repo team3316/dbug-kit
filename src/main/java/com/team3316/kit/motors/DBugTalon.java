@@ -3,8 +3,6 @@ package com.team3316.kit.motors;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.StatusFrame;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
-import com.team3316.kit.config.Config;
-import com.team3316.kit.config.ConfigException;
 import edu.wpi.first.wpilibj.PIDOutput;
 import java.util.Objects;
 
@@ -27,7 +25,7 @@ public class DBugTalon extends TalonSRX implements DBugMotorController {
    * @param deviceNumber The Talon's ID on the CAN chain
    * @param type The Talon's sensor type (from the {@link TalonType} enum)
    */
-  public DBugTalon(int deviceNumber, TalonType type) throws ConfigException {
+  public DBugTalon(int deviceNumber, TalonType type) {
     super(deviceNumber);
 
     this._type = type;
@@ -38,17 +36,15 @@ public class DBugTalon extends TalonSRX implements DBugMotorController {
    * Constructs a new DBugTalon using the regular configuration.
    * @param deviceNumber The Talon's ID on the CAN chain
    */
-  public DBugTalon(int deviceNumber) throws ConfigException {
+  public DBugTalon(int deviceNumber) {
     this(deviceNumber, TalonType.REGULAR);
   }
 
   /**
    * Configures the talon using the parameters defined in the Config
-   * @throws ConfigException If something won't be found in the robot's config, a ConfigException will
-   *                         be thrown.
    */
   @Override
-  public void configure () throws ConfigException {
+  public void configure () {
     String configLabel = this._type.getConfigLabel();
 
     // General configurations
@@ -56,10 +52,7 @@ public class DBugTalon extends TalonSRX implements DBugMotorController {
     this.configNominalOutputReverse(0, DBugTalon.kTimeout);
     this.configPeakOutputForward(+1, DBugTalon.kTimeout);
     this.configPeakOutputReverse(-1, DBugTalon.kTimeout);
-    this.configNeutralDeadband(
-      (double) Config.getInstance().get(configLabel + ".neutralDeadband"),
-      DBugTalon.kTimeout
-    );
+    this.configNeutralDeadband(0.04); // Factory default
 
     // Closed loop configurations
     if (this._type.isClosedLoop()) {

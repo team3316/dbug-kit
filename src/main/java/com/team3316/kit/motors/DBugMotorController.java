@@ -1,7 +1,6 @@
 package com.team3316.kit.motors;
 
 import com.ctre.phoenix.motorcontrol.NeutralMode;
-import com.team3316.kit.config.ConfigException;
 import edu.wpi.first.wpilibj.PIDOutput;
 import edu.wpi.first.wpilibj.PIDSource;
 import edu.wpi.first.wpilibj.PIDSourceType;
@@ -10,10 +9,8 @@ public interface DBugMotorController {
   /**
    * Configures the motor controller using the parameters defined in the Config
    *
-   * @throws ConfigException If something won't be found in the robot's config, a ConfigException will
-   *                         be thrown.
    */
-   void configure () throws ConfigException;
+   void configure ();
 
   /**
    * Sets the distance *per revolution* of the encoder connected to the motor controller. This sets the motor controller's inner

@@ -6,7 +6,6 @@ import com.revrobotics.CANEncoder;
 import com.revrobotics.CANPIDController;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.ControlType;
-import com.team3316.kit.config.ConfigException;
 import edu.wpi.first.wpilibj.PIDOutput;
 
 public class DBugSparkMax extends CANSparkMax implements DBugMotorController {
@@ -39,7 +38,7 @@ public class DBugSparkMax extends CANSparkMax implements DBugMotorController {
   }
 
   @Override
-  public void configure () throws ConfigException {
+  public void configure () {
     this.restoreFactoryDefaults();
   }
 
