@@ -4,7 +4,6 @@ import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.revrobotics.CANError;
 import com.revrobotics.CANPIDController;
-import com.team3316.kit.config.ConfigException;
 import com.team3316.kit.motors.DBugSparkMax;
 
 /**
@@ -28,7 +27,7 @@ public class SparkMaxTesting extends DBugSparkMax implements AutoCloseable{
     }
 
     @Override
-    public void configure() throws ConfigException { }
+    public void configure() { }
 
     @Override
     public CANError restoreFactoryDefaults() {

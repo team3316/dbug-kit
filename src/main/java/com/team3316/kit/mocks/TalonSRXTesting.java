@@ -18,7 +18,6 @@ import com.ctre.phoenix.motorcontrol.RemoteSensorSource;
 import com.ctre.phoenix.motorcontrol.SensorTerm;
 import com.ctre.phoenix.motorcontrol.StatusFrame;
 import com.ctre.phoenix.motorcontrol.StickyFaults;
-import com.team3316.kit.config.ConfigException;
 import com.team3316.kit.motors.DBugTalon;
 import com.team3316.kit.motors.TalonType;
 
@@ -33,11 +32,11 @@ public class TalonSRXTesting extends DBugTalon implements IMotorController {
   private NeutralMode _neutralMode;
   private boolean _phaseSensor, _invertad;
 
-  public TalonSRXTesting(int id, TalonType type) throws ConfigException {
+  public TalonSRXTesting(int id, TalonType type) {
     super(id, type);
   }
 
-  public TalonSRXTesting(int id) throws ConfigException {
+  public TalonSRXTesting(int id) {
     super(id);
   }
   
