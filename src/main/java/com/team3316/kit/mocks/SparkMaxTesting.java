@@ -40,6 +40,11 @@ public class SparkMaxTesting extends DBugSparkMax implements AutoCloseable{
     }
 
     @Override
+    public void setupPIDF(double kP, double kI, double kD, double kF) {
+        //Nothin'g
+    }
+
+    @Override
     public void setDistance(double distance) {
         this._dist = distance;
     }
