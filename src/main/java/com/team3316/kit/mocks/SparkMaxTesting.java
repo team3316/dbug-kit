@@ -55,6 +55,11 @@ public class SparkMaxTesting extends DBugSparkMax implements AutoCloseable{
     }
 
     @Override
+    public void setupPIDF(double kP, double kI, double kD, double kF) {
+        
+    }
+
+    @Override
     public void set(ControlMode mode, double outputValue) {
         this._demand = outputValue;
         this._mode = mode;
