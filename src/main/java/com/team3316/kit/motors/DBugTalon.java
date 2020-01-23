@@ -29,6 +29,7 @@ public class DBugTalon extends TalonSRX implements DBugMotorController {
     super(deviceNumber);
 
     this._type = type;
+    this.configFactoryDefault();
     this.configure();
   }
 
