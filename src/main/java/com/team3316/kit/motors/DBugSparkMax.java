@@ -70,6 +70,11 @@ public class DBugSparkMax extends CANSparkMax implements DBugMotorController {
   }
 
   @Override
+  public double getOutputCurrent() {
+    return super.getOutputCurrent();
+  }
+  
+  @Override
   public void setDistance (double distance) {
     this._encoder.setPosition(distance / this._distPerRevolution);
   }

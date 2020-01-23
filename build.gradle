@@ -31,13 +31,13 @@ targetCompatibility = 11
 
 dependencies {
     implementation group: 'de.siegmar', name: 'fastcsv', version: '1.0.2'
-    implementation group: 'edu.wpi.first.wpilibj', name: 'wpilibj-java', version: '2020.1.2'
-    implementation group: 'edu.wpi.first.wpilibNewCommands', name: 'wpilibNewCommands-java', version: '2020.1.2'
-    implementation group: 'com.ctre.phoenix', name: 'api-java', version: '5.14.1'
-    implementation group: 'com.ctre.phoenix', name: 'wpiapi-java', version: '5.14.1'
+    implementation group: 'edu.wpi.first.wpilibj', name: 'wpilibj-java', version: '2020.2.2'
+    implementation group: 'edu.wpi.first.wpilibNewCommands', name: 'wpilibNewCommands-java', version: '2020.2.2'
+    implementation group: 'com.ctre.phoenix', name: 'api-java', version: '5.17.6'
+    implementation group: 'com.ctre.phoenix', name: 'wpiapi-java', version: '5.17.6'
     implementation group: 'com.kauailabs.navx.frc', name: 'navx-java', version: '3.1.400'
-    implementation group: 'com.revrobotics.frc', name: 'SparkMax-java', version: '1.1.9'
-    implementation group: 'com.revrobotics.frc', name: 'SparkMax-driver', version: '1.1.9'
+    implementation group: 'com.revrobotics.frc', name: 'SparkMax-java', version: '1.5.1'
+    implementation group: 'com.revrobotics.frc', name: 'SparkMax-driver', version: '1.5.2'
 
     testImplementation group: 'junit', name: 'junit', version: '4.12'
 }
