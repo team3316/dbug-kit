@@ -81,7 +81,7 @@ public class DBugLogger extends Logger {
 
     try {
       Date currentDate = Calendar.getInstance().getTime();
-      SimpleDateFormat fileDateFormatter = new SimpleDateFormat("dd-MM-yyyy-hh:MM:ss");
+      SimpleDateFormat fileDateFormatter = new SimpleDateFormat("yyyyMMddHHmmss");
       String timestamp = fileDateFormatter.format(currentDate);
 
       // TODO - Add writing to USB stick
