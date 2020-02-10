@@ -17,22 +17,25 @@ public class DBugSparkMax extends CANSparkMax implements DBugMotorController {
    * Create a new SPARK MAX Controller
    *
    * @param deviceNumber The device ID.
-   * @param type     The motor type connected to the controller. Brushless motors
-   *                 must be connected to their matching color and the hall sensor
-   *                 plugged in. Brushed motors must be connected to the Red and
+   * @param type         The motor type connected to the controller. Brushless
+   *                     motors must be connected to their matching color and the
+   *                     hall sensor plugged in. Brushed motors must be connected
+   *                     to the Red and
    */
   public DBugSparkMax(int deviceNumber, MotorType type) {
     super(deviceNumber, type);
 
     this._encoder = this.getEncoder();
     this._pidController = this.getPIDController();
-    
+
     this.restoreFactoryDefaults();
   }
 
   /**
-   * Create a new Spark MAX controller. This constructor uses the brushless configuration by default
-   * since we usually use CTRE controllers for brushed motors
+   * Create a new Spark MAX controller. This constructor uses the brushless
+   * configuration by default since we usually use CTRE controllers for brushed
+   * motors
+   * 
    * @param deviceNumber The CAN device ID.
    */
   public DBugSparkMax(int deviceNumber) {
@@ -46,14 +49,21 @@ public class DBugSparkMax extends CANSparkMax implements DBugMotorController {
 
   @Override
   public void setDistancePerRevolution (double dpr, int upr) {
+    // No need for UPR because the Spark Max gives values from -1 to 1 on his own
     this._distPerRevolution = dpr;
   }
 
+  /**
+   * @return the encoder's value in rotations
+   */
   @Override
   public double getEncoderValue () {
     return this._encoder.getPosition(); // Units - NU
   }
 
+  /**
+   * @return the encoder's velocity in RPM
+   */
   @Override
   public double getEncoderRate () {
     return this._encoder.getVelocity(); // Units - RPM
@@ -66,14 +76,14 @@ public class DBugSparkMax extends CANSparkMax implements DBugMotorController {
 
   @Override
   public double getVelocity () {
-    return 60.0 * this._distPerRevolution * this.getEncoderRate();
+    return this._distPerRevolution * this.getEncoderRate();
   }
 
   @Override
   public double getOutputCurrent() {
     return super.getOutputCurrent();
   }
-  
+
   @Override
   public void setDistance (double distance) {
     this._encoder.setPosition(distance / this._distPerRevolution);
@@ -85,7 +95,6 @@ public class DBugSparkMax extends CANSparkMax implements DBugMotorController {
     this._pidController.setI(kI);
     this._pidController.setD(kD);
     this._pidController.setFF(kF);
-    this._pidController.setFF(0.0);
     this._pidController.setOutputRange(-1.0, 1.0);
   }
 
@@ -107,20 +116,20 @@ public class DBugSparkMax extends CANSparkMax implements DBugMotorController {
 
   public void set(ControlMode mode, double outputValue) {
     switch (mode) {
-      case Position:
-        this._pidController.setReference(outputValue, ControlType.kPosition);
-        break;
-      case Velocity:
-        this._pidController.setReference(outputValue, ControlType.kVelocity);
-        break;
-      case Current:
-        this._pidController.setReference(outputValue, ControlType.kCurrent);
-        break;
-      case PercentOutput:
-        this.set(outputValue);
-        break;
-      default:
-        throw new Error("Control Mode " + mode.toString() + " isn't supported by the Spark MAX at the moment.");
+    case Position:
+      this._pidController.setReference(outputValue, ControlType.kPosition);
+      break;
+    case Velocity:
+      this._pidController.setReference(outputValue, ControlType.kVelocity);
+      break;
+    case Current:
+      this._pidController.setReference(outputValue, ControlType.kCurrent);
+      break;
+    case PercentOutput:
+      this.set(outputValue);
+      break;
+    default:
+      throw new Error("Control Mode " + mode.toString() + " isn't supported by the Spark MAX at the moment.");
     }
   }
 }
