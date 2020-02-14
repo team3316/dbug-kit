@@ -21,8 +21,6 @@ import com.ctre.phoenix.motorcontrol.StickyFaults;
 import com.team3316.kit.motors.DBugTalon;
 import com.team3316.kit.motors.TalonType;
 
-import edu.wpi.first.wpilibj.PIDOutput;
-
 public class TalonSRXTesting extends DBugTalon implements IMotorController {
 
   private int _id;
@@ -47,12 +45,6 @@ public class TalonSRXTesting extends DBugTalon implements IMotorController {
   public double getDistance() {
     return this._demand;
   }
-
-  @Override
-  public PIDOutput getPercentPIDOutput() {
-    return null;
-  }
-
 
   @Override
   public void follow(IMotorController masterToFollow) {

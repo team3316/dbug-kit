@@ -3,7 +3,6 @@ package com.team3316.kit.motors;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.StatusFrame;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
-import edu.wpi.first.wpilibj.PIDOutput;
 import java.util.Objects;
 
 public class DBugTalon extends TalonSRX implements DBugMotorController {
@@ -29,7 +28,6 @@ public class DBugTalon extends TalonSRX implements DBugMotorController {
     super(deviceNumber);
 
     this._type = type;
-    this.configFactoryDefault();
     this.configure();
   }
 
@@ -46,6 +44,12 @@ public class DBugTalon extends TalonSRX implements DBugMotorController {
    */
   @Override
   public void configure () {
+    // Do MotorBase's configuration first
+    this.configFactoryDefault();
+
+    // Set motor voltage to 0 at start
+    this.set(ControlMode.PercentOutput, 0);
+
     String configLabel = this._type.getConfigLabel();
 
     // General configurations
@@ -259,12 +263,5 @@ public class DBugTalon extends TalonSRX implements DBugMotorController {
         super.set(mode, outputValue);
         break;
     }
-  }
-
-  /**
-   * @return An instance of WPILib's PIDOutput for use with regular PID loops for percentage output.
-   */
-  public PIDOutput getPercentPIDOutput() {
-    return output -> set(ControlMode.PercentOutput, output);
   }
 }

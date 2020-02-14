@@ -6,7 +6,6 @@ import com.revrobotics.CANEncoder;
 import com.revrobotics.CANPIDController;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.ControlType;
-import edu.wpi.first.wpilibj.PIDOutput;
 
 public class DBugSparkMax extends CANSparkMax implements DBugMotorController {
   private CANEncoder _encoder;
@@ -28,7 +27,7 @@ public class DBugSparkMax extends CANSparkMax implements DBugMotorController {
     this._encoder = this.getEncoder();
     this._pidController = this.getPIDController();
 
-    this.restoreFactoryDefaults();
+    this.configure();
   }
 
   /**
@@ -43,12 +42,13 @@ public class DBugSparkMax extends CANSparkMax implements DBugMotorController {
   }
 
   @Override
-  public void configure () {
+  public void configure() {
     this.restoreFactoryDefaults();
+    this.set(ControlMode.PercentOutput, 0);
   }
 
   @Override
-  public void setDistancePerRevolution (double dpr, int upr) {
+  public void setDistancePerRevolution(double dpr, int upr) {
     // No need for UPR because the Spark Max gives values from -1 to 1 on his own
     this._distPerRevolution = dpr;
   }
@@ -57,25 +57,25 @@ public class DBugSparkMax extends CANSparkMax implements DBugMotorController {
    * @return the encoder's value in rotations
    */
   @Override
-  public double getEncoderValue () {
-    return this._encoder.getPosition(); // Units - NU
+  public double getEncoderValue() {
+    return this._encoder.getPosition();
   }
 
   /**
    * @return the encoder's velocity in RPM
    */
   @Override
-  public double getEncoderRate () {
-    return this._encoder.getVelocity(); // Units - RPM
+  public double getEncoderRate() {
+    return this._encoder.getVelocity();
   }
 
   @Override
-  public double getDistance () {
+  public double getDistance() {
     return this._distPerRevolution * this.getEncoderValue();
   }
 
   @Override
-  public double getVelocity () {
+  public double getVelocity() {
     return this._distPerRevolution * this.getEncoderRate();
   }
 
@@ -85,12 +85,12 @@ public class DBugSparkMax extends CANSparkMax implements DBugMotorController {
   }
 
   @Override
-  public void setDistance (double distance) {
+  public void setDistance(double distance) {
     this._encoder.setPosition(distance / this._distPerRevolution);
   }
 
   @Override
-  public void setupPIDF (double kP, double kI, double kD, double kF) {
+  public void setupPIDF(double kP, double kI, double kD, double kF) {
     this._pidController.setP(kP);
     this._pidController.setI(kI);
     this._pidController.setD(kD);
@@ -99,7 +99,7 @@ public class DBugSparkMax extends CANSparkMax implements DBugMotorController {
   }
 
   @Override
-  public void zeroEncoder () {
+  public void zeroEncoder() {
     this._encoder.setPosition(0);
   }
 
@@ -107,11 +107,6 @@ public class DBugSparkMax extends CANSparkMax implements DBugMotorController {
   public void setNeutralMode (NeutralMode mode) {
     IdleMode idleModeFromNeutralMode = mode == NeutralMode.Brake ? IdleMode.kBrake : IdleMode.kCoast;
     this.setIdleMode(idleModeFromNeutralMode);
-  }
-
-  @Override
-  public PIDOutput getPercentPIDOutput () {
-    return this; // REMARK - The Spark MAX implements the PIDOutput interface
   }
 
   public void set(ControlMode mode, double outputValue) {

@@ -1,9 +1,6 @@
 package com.team3316.kit.motors;
 
 import com.ctre.phoenix.motorcontrol.NeutralMode;
-import edu.wpi.first.wpilibj.PIDOutput;
-import edu.wpi.first.wpilibj.PIDSource;
-import edu.wpi.first.wpilibj.PIDSourceType;
 
 public interface DBugMotorController {
   /**
@@ -93,53 +90,4 @@ public interface DBugMotorController {
    * @param mode The given neutral mode - either coast or brake
    */
   void setNeutralMode(NeutralMode mode);
-
-  /**
-   * @return An instance of WPILib's PIDSource for use with regular PID loops for distance input.
-   */
-  default PIDSource getDistancePIDSource() {
-    return new PIDSource() {
-      @Override
-      public void setPIDSourceType (PIDSourceType pidSource) {
-        // TODO - Maybe implement? Maybe not? Need to check about this.
-      }
-
-      @Override
-      public PIDSourceType getPIDSourceType () {
-        return PIDSourceType.kDisplacement;
-      }
-
-      @Override
-      public double pidGet () {
-        return getDistance();
-      }
-    };
-  }
-
-  /**
-   * @return An instance of WPILib's PIDSource for use with regular PID loops for velocity input.
-   */
-  default PIDSource getVelocityPIDSource() {
-    return new PIDSource() {
-      @Override
-      public void setPIDSourceType (PIDSourceType pidSource) {
-        // TODO - Maybe implement? Maybe not? Need to check about this.
-      }
-
-      @Override
-      public PIDSourceType getPIDSourceType () {
-        return PIDSourceType.kRate;
-      }
-
-      @Override
-      public double pidGet () {
-        return getVelocity();
-      }
-    };
-  }
-
-  /**
-   * @return An instance of WPILib's PIDOutput for use with regular PID loops for percentage output.
-   */
-  PIDOutput getPercentPIDOutput();
 }
