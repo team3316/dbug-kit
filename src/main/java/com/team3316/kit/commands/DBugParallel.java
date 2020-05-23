@@ -1,12 +1,10 @@
-package com.team3316.kit.commands;
+package frc.robot.commands;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
-
-import com.team3316.kit.DBugLogger;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
@@ -25,10 +23,10 @@ public abstract class DBugParallel extends DBugCommand {
      */
     public DBugParallel(List<Supplier<CommandBase>> cmds) {
         if (cmds.size() <= 0) {
-            DBugLogger.getInstance().severe("ERROR: Tried to initialize an empty Parallel");
             throw new IllegalArgumentException("Tried to initialize an empty parallel");
         } else {
-            commands = cmds;
+            commands = List.copyOf(cmds);
+            parallelsDict = new HashMap<>();
         }
     }
 
@@ -52,9 +50,6 @@ public abstract class DBugParallel extends DBugCommand {
      * runs the next parallel sequence of command that should run
      */
     protected void _start() {
-        DBugLogger.getInstance().info(this.getClass().getName() + " HAS STARTED");
-        parallelsDict = new HashMap<>();
-
         for (Supplier<CommandBase> sup : commands) {
             CommandBase cmd = sup.get();
             cmd.schedule();
@@ -77,7 +72,6 @@ public abstract class DBugParallel extends DBugCommand {
      */
     @Override
     protected void fin(boolean interrupted) {
-        DBugLogger.getInstance().info(this.getClass().getName() + (interrupted ? " INTERRUPTED" : " ENDED"));
         parallelsDict.keySet().stream().filter(cmd -> cmd.isScheduled()).forEach(cmd -> cmd.cancel());
     }
 
@@ -87,9 +81,5 @@ public abstract class DBugParallel extends DBugCommand {
                 + commands.stream().map(supp -> supp.get().toString()).collect(Collectors.joining("\n\t"));
 
         return res;
-    }
-
-    public enum ParallelKind {
-        Race, Deadline, Wait;
     }
 }

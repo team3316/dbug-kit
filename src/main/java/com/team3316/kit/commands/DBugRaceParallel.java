@@ -1,9 +1,7 @@
-package com.team3316.kit.commands;
+package frc.robot.commands;
 
 import java.util.List;
 import java.util.function.Supplier;
-
-import com.team3316.kit.DBugLogger;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
@@ -22,7 +20,6 @@ public class DBugRaceParallel extends DBugParallel {
                 .filter(cmd -> !cmd.isScheduled())
                 .forEach((cmd) -> {
                     if (cmd.isFinished()) {
-                        DBugLogger.getInstance().info(this.getClass().getName() + " RACE PARALLEL ENDED");
                         this.isFinished = true;
                     } else {
                         this.cancel();

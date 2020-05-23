@@ -1,10 +1,9 @@
-package com.team3316.kit.commands;
+package frc.robot.commands;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.function.Supplier;
 
-import com.team3316.kit.DBugLogger;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
 /**
@@ -19,10 +18,10 @@ public class DBugDeadlineParallel extends DBugParallel {
     }
     
     /**
-     * runs the next parallel sequence of command that should run
+     * runs the next parallel sequence of commands that should run
+     * Modified since we need to save the parallel
      */
     protected void _start() {
-        DBugLogger.getInstance().info(this.getClass().getName() + " HAS STARTED");
         parallelsDict = new HashMap<>();
 
         for (int i = 0; i < commands.size(); i++) {
@@ -45,7 +44,6 @@ public class DBugDeadlineParallel extends DBugParallel {
                 .anyMatch((entry) -> !entry.getKey().isScheduled() && !entry.getValue())) {
             this.cancel();
         } else if (parallelsDict.get(deadline)) {
-            DBugLogger.getInstance().info(this.getClass().getName() + " RACE PARALLEL ENDED");
             this.isFinished = true;
         }
     }
