@@ -1,4 +1,4 @@
-package frc.robot.commands;
+package com.team3316.kit.commands;
 
 import java.util.List;
 import java.util.Map;
@@ -7,7 +7,9 @@ import java.util.function.Supplier;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
 /**
- * DBugCommandGroup
+ * DBugWaitParallel
+ * This class implements a structure that stores multiple commands and runs them in parallel
+ * The run ends when all commands are done
  */
 public class DBugWaitParallel extends DBugParallel {
 

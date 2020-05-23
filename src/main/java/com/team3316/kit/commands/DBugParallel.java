@@ -1,4 +1,4 @@
-package frc.robot.commands;
+package com.team3316.kit.commands;
 
 import java.util.HashMap;
 import java.util.List;
@@ -9,7 +9,9 @@ import java.util.stream.Collectors;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
 /**
- * DBugCommandGroup
+ * DBugParallel
+ * This abstract class implements a structure that stores multiple commands and runs them in parallel
+ * It's children implement these structures and the conditions for stopping the run
  */
 public abstract class DBugParallel extends DBugCommand {
     protected List<Supplier<CommandBase>> commands;

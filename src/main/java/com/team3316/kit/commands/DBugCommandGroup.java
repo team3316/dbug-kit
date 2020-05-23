@@ -1,4 +1,4 @@
-package frc.robot.commands;
+package com.team3316.kit.commands;
 
 import java.util.ArrayDeque;
 import java.util.Arrays;
@@ -10,6 +10,7 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 
 /**
  * DBugCommandGroup
+ * This structure holds and runs multiple commands sequentially
  */
 public abstract class DBugCommandGroup extends DBugCommand {
     private Queue<Supplier<CommandBase>> queue = new ArrayDeque<>();
