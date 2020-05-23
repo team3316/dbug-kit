@@ -5,7 +5,7 @@ import com.kauailabs.navx.frc.AHRS;
 import com.team3316.kit.DBugLogger;
 import com.team3316.kit.Util;
 import com.team3316.kit.control.FFGains;
-import com.team3316.kit.control.PIDGains;
+import com.team3316.kit.control.PIDFGains;
 import com.team3316.kit.motors.DBugTalon;
 import edu.wpi.first.wpilibj.Notifier;
 
@@ -21,7 +21,7 @@ public class TalonTrajectoryFollower {
   private Trajectory _trajectory;
 
   private int _currentSegment = 0;
-  private PIDGains _leftGains = null, _rightGains = null, _angleGains = null;
+  private PIDFGains _leftGains = null, _rightGains = null, _angleGains = null;
   private FFGains _feedForwardGains = null;
   private double _initialAngle;
   private double _leftTotalError = 0, _rightTotalError = 0, _angleTotalError = 0;
@@ -38,28 +38,28 @@ public class TalonTrajectoryFollower {
     this._trajectory = trajectory;
   }
 
-  public void setLeftPIDGains(PIDGains gains) {
+  public void setLeftPIDFGains(PIDFGains gains) {
     this._leftGains = gains;
   }
 
-  public void setLeftPIDGains(double kP, double kI, double kD, double tolerance) {
-    this._leftGains = new PIDGains(kP, kI, kD, tolerance);
+  public void setLeftPIDFGains(double kP, double kI, double kD, double kF, double tolerance) {
+    this._leftGains = new PIDFGains(kP, kI, kD, kF, tolerance);
   }
 
-  public void setRightPIDGains(PIDGains gains) {
+  public void setRightPIDFGains(PIDFGains gains) {
     this._rightGains = gains;
   }
 
-  public void setRightPIDGains(double kP, double kI, double kD, double tolerance) {
-    this._rightGains = new PIDGains(kP, kI, kD, tolerance);
+  public void setRightPIDFGains(double kP, double kI, double kD, double kF, double tolerance) {
+    this._rightGains = new PIDFGains(kP, kI, kD, kF, tolerance);
   }
 
-  public void setAnglePIDGains(PIDGains gains) {
+  public void setAnglePIDFGains(PIDFGains gains) {
     this._angleGains = gains;
   }
 
-  public void setAnglePIDGains(double kP, double kI, double kD, double tolerance) {
-    this._angleGains = new PIDGains(kP, kI, kD, tolerance);
+  public void setAnglePIDFGains(double kP, double kI, double kD, double kF, double tolerance) {
+    this._angleGains = new PIDFGains(kP, kI, kD, kF, tolerance);
   }
 
   public void setFFGains(FFGains gains) {
@@ -70,7 +70,7 @@ public class TalonTrajectoryFollower {
     this._feedForwardGains = new FFGains(1 / maxVelocity, 1 / maxAcceleration);
   }
 
-  private double calculatePID(double error, double totalError, double lastError, PIDGains gains) {
+  private double calculatePID(double error, double totalError, double lastError, PIDFGains gains) {
     double P = gains.getP() * error;
     double I = gains.getI() * totalError;
     double D = gains.getD() * (error - lastError) / LOOP_PERIOD;
