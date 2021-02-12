@@ -1,11 +1,13 @@
 package com.team3316.kit.motors;
 
+import java.util.Objects;
+
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.StatusFrame;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
-import java.util.Objects;
+import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 
-public class DBugTalon extends TalonSRX implements DBugMotorController {
+public class DBugTalon extends WPI_TalonSRX implements DBugMotorController {
   /*
    * Private members
    */
