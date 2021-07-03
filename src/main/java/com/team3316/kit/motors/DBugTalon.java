@@ -76,7 +76,7 @@ public class DBugTalon extends WPI_TalonSRX implements DBugMotorController {
       );
 
       if (this._type.isRelative()) { // Zero the encoder if using a relative encoder
-        this.setSelectedSensorPosition(0, DBugTalon.kPIDSlot, DBugTalon.kTimeout);
+        this.setSelectedSensorPosition(0.0, DBugTalon.kPIDSlot, DBugTalon.kTimeout);
       }
     }
   }
