@@ -18,10 +18,6 @@ repositories {
     }
 
     maven {
-        url 'http://www.kauailabs.com/maven2'
-    }
-
-    maven {
         url 'http://www.revrobotics.com/content/sw/max/sdk/maven/'
     }
 }
@@ -31,13 +27,12 @@ targetCompatibility = 11
 
 dependencies {
     implementation group: 'de.siegmar', name: 'fastcsv', version: '1.0.2'
-    implementation group: 'edu.wpi.first.wpilibj', name: 'wpilibj-java', version: '2020.2.2'
-    implementation group: 'edu.wpi.first.wpilibNewCommands', name: 'wpilibNewCommands-java', version: '2020.2.2'
+    implementation group: 'edu.wpi.first.wpilibj', name: 'wpilibj-java', version: '2021.3.1'
+    implementation group: 'edu.wpi.first.wpilibNewCommands', name: 'wpilibNewCommands-java', version: '2021.3.1'
     implementation group: 'com.ctre.phoenix', name: 'api-java', version: '5.19.4'
     implementation group: 'com.ctre.phoenix', name: 'wpiapi-java', version: '5.19.4'
-    //implementation group: 'com.kauailabs.navx.frc', name: 'navx-java', version: '3.1.400'
-    implementation group: 'com.revrobotics.frc', name: 'SparkMax-java', version: '1.5.1'
-    implementation group: 'com.revrobotics.frc', name: 'SparkMax-driver', version: '1.5.1'
+    implementation group: 'com.revrobotics.frc', name: 'SparkMax-java', version: '1.5.4'
+    implementation group: 'com.revrobotics.frc', name: 'SparkMax-driver', version: '1.5.4'
 
     testImplementation group: 'junit', name: 'junit', version: '4.12'
 }
